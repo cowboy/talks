@@ -1,0 +1,406 @@
+@font-face {
+  font-family: 'OFL Sorts Mill Goudy TT';
+  font-style: normal;
+  font-weight: normal;
+  src: local('OFL Sorts Mill Goudy TT'), url('../font/goudy.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Consolas';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Consolas'), url('../font/Consolas.ttf') format('truetype');
+}
+
+body {
+  font-family:'OFL Sorts Mill Goudy TT';
+  color: #fff;
+  background-image: -moz-radial-gradient( 50% 30% 90deg, circle, #006EA0 0%, #304160 600px);
+  background-image: -webkit-gradient(radial, 50% 30%, 0, 50% 30%, 600, from(#006EA0), to(#304160));
+  background-color: #006EA0;
+  background-attachment: fixed;
+}
+
+#footer {
+  opacity: 0.5;
+  padding: 0 1em;
+}
+
+/* Content Styling */
+
+section {
+  font-weight: bold;
+  font-size: 40px;
+  text-shadow: 0px -2px 0px #374683;
+  z-index: 9001;
+}
+
+.no-preso section {
+  font-size: 30px;
+}
+
+.no-preso body > section > div {
+  height: auto !important;
+}
+
+.no-preso body > section:after {
+  content: "❖";
+  display: block;
+  text-align: center;
+  opacity: 0.3;
+  margin: 2em 0;
+}
+
+.no-preso body > section:last-of-type:after,
+.no-preso body > section:first-of-type:before {
+  content: "Copyright © 2010 “Cowboy” Ben Alman, licensed Attribution-NonCommercial 3.0";
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+.no-preso body > section:first-of-type:before {
+  margin: 0 0 5em;
+}
+
+.no-preso body > section:last-of-type:after {
+  margin: 5em 0 0;
+}
+
+.preso section > div {
+  /* nudge content up vertically, slightly */
+  margin: -10px 0 10px;
+}
+
+.preso section > div > * {
+  width: 100%;
+}
+
+section > div > * {
+  margin: 0.1em 40px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section > div > img {
+  display: block;
+}
+
+section table {
+  width: auto;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section a {
+  color: #fff;
+  text-decoration: none;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+section h1 {
+  font-size: 200%;
+  text-align: center;
+}
+
+section h2 {
+  font-size: 160%;
+  text-align: center;
+}
+
+section h3 {
+  font-size: 130%;
+  text-align: center;
+}
+
+section p {
+  font-size: 100%;
+  text-align: center;
+}
+
+section p.subhead {
+  font-weight: 400;
+  font-size: 60%;
+  margin: -1em 0 0.5em;
+}
+
+section h1 > code,
+section h2 > code,
+section h3 > code {
+  padding-left: 0.15em;
+  padding-right: 0.15em;
+}
+
+section code {
+  font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+  font-weight: 700;
+}
+
+section td {
+  vertical-align: top;
+}
+
+section td:not(:last-child) {
+  padding-right: 0.5em;
+}
+
+section .smaller {
+  font-size: 80%;
+}
+
+section table,
+section .small {
+  font-weight: 400;
+  font-size: 60%;
+}
+
+section ul,
+section ol {
+  text-align: left;
+}
+
+section blockquote {
+  font-style: italic;
+  padding: 0 40px 0 125px;
+  position: relative;
+  line-height: 1.2em;
+  min-height: 2.2em;
+  float: left;
+}
+
+section blockquote:before {
+  content: "“";
+  font-family: Georgia;
+  font-style: normal;
+  font-size: 400%;
+  width: 120px;
+  text-align: right;
+  position: absolute;
+  left: 0;
+  top: 0.01em;
+  opacity: 0.3;
+  line-height: 1.05em;
+}
+
+section blockquote[cite]:after {
+  display: block;
+  content: attr(cite);
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+section ::-moz-selection {
+  color: #fff;
+  background: #AE3E43;
+}
+
+section ::selection {
+  color: #fff;
+  background: #AE3E43;
+}
+
+/* Section aside (external reference links) */
+
+section aside {
+  font-weight: 400;
+  padding-top: 1.5em;
+  font-size: 16px;
+  text-align: center;
+  display: block;
+}
+
+section aside,
+section aside a {
+  color: #A4B2BC;
+}
+
+section aside a:hover {
+  color: #fff;
+}
+
+section aside a:not(:first-child):before {
+  content: "•";
+  padding: 0 0.7em 0 0.5em;
+  color: #fff;
+  opacity: 0.3;
+}
+
+section aside br + a:before {
+  content: "" !important;
+  padding: 0 !important;
+}
+
+
+/* Hovers */
+
+section .hovers {
+  position: relative;
+}
+
+section .hovers span,
+section .hovers span:after {
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+section .hovers:hover span {
+  opacity: 0.2;
+}
+
+section .hovers:hover span:hover {
+  opacity: 1;
+}
+
+section .hovers:hover span:hover:after {
+  opacity: 0.2;
+}
+
+section .hovers:hover span[data-title]:hover:after {
+  content: attr(data-title);
+  font-size: 70%;
+  display: block;
+  position: absolute;
+  top: -1.2em;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: 400;
+}
+
+/* Comma list */
+
+section .commalist span:not(:last-child):after {
+  content: ",";
+}
+
+/* Code blocks / Syntax Highlighter */
+
+.syntaxhighlighter {
+  font-size: 19.5px !important;
+  border: 0.2em solid rgba(aa,aa,aa,0.8) !important;
+  left: -0.2em !important;
+  background-color: rgba(ff,ff,ff,0.8) !important;
+  max-height: 13.2em !important;
+  min-width: 40em !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  margin: 0 auto !important;
+  text-shadow: none;
+}
+
+/* <pre class="brush:js class-name:l16"> */
+.syntaxhighlighter.l16 { max-height: 17.6em !important; }
+
+/* <pre class="brush:js class-name:l20"> */
+.syntaxhighlighter.l20 { max-height: 22em !important; }
+
+.syntaxhighlighter .line.alt1 {
+  background-color: rgba(0,0,0,0.04) !important;
+}
+
+.syntaxhighlighter table td.gutter .line {
+  padding-left: 0.5em !important;
+}
+
+.syntaxhighlighter.hover {
+  font-size: 21.5px !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  z-index: 9001 !important;
+  background-color: #fff !important;
+  max-height: none !important;
+  overflow: auto !important;
+  margin: 0 !important;
+  padding: 0.2em 0 !important;
+  border: none !important;
+}
+
+.syntaxhighlighter.hover table td.code .line {
+  padding: 0 0.5em !important;
+}
+
+.no-preso .syntaxhighlighter {
+  font-size: 16px !important;
+  max-height: none !important;
+  width: 48em !important;
+}
+
+.syntaxhighlighter .this {
+  color: #f4f !important;
+}
+
+
+/*
+.syntaxhighlighter ::-moz-selection {
+  color: #fff;
+  background: #0a0;
+}
+
+.syntaxhighlighter ::selection {
+  color: #fff;
+  background: #0a0;
+}
+*/
+
+.preso .syntaxhighlighter .gutter {
+  cursor: -moz-zoom-in;
+  cursor: -webkit-zoom-in;
+}
+
+.preso .syntaxhighlighter.hover .gutter {
+  cursor: -moz-zoom-out;
+  cursor: -webkit-zoom-out;
+}
+
+.syntaxhighlighter .code .line code {
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+.syntaxhighlighter.selected .code .line:not(.selected) code {
+  color: #ccc !important;
+}
+
+/* SLIDE ROTATION */
+
+/* Left -> Current (left or "previous" slide comes into view) */
+
+.preso section {
+  -moz-transform: translate(-200%, 0);
+  -webkit-transform: translate(-200%, 0);
+}
+
+.preso section.rotate {
+  -moz-transform: scale(0.1) rotate(-120deg);
+  -webkit-transform: scale(0.1) rotate(-120deg);
+}
+
+/* Current slide */
+
+.preso section[aria-selected] {
+  -moz-transform: scale(1.0) translate(0, 0);
+  -webkit-transform: scale(1.0) translate(0, 0);
+}
+
+/* Current <- Right (right or "next" slide comes into view) */
+
+.preso section[aria-selected] + section, /* webkit doesn't support ~ yet */
+.preso section[aria-selected] ~ section {
+  -moz-transform: translate(200%, 0);
+  -webkit-transform: translate(200%, 0);
+}
+
+.preso section[aria-selected] + section.rotate, /* webkit doesn't support ~ yet */
+.preso section[aria-selected] ~ section.rotate {
+  -moz-transform: scale(5) rotate(120deg);
+  -webkit-transform: scale(5) rotate(120deg);
+}

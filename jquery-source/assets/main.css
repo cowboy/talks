@@ -1,0 +1,10 @@
+pre.viewer-content {
+  margin: 0;
+  font-size: inherit;
+}
+a { color: inherit; text-decoration: none; }
+a:visited { color: rgb(160, 160, 160); }
+a:hover { text-decoration: underline; }
+.viewer-content { z-index: -1; }
+.webkit-line-number:target { color: rgb(80, 80, 80); background-color: rgb(220, 220, 220); border-right-color: rgb(80, 80, 80); }
+.webkit-line-number:target a { color: inherit; }

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>A Test Page</title>
+<script type="text/javascript" src="preso/js/jquery.js"></script>
+<style type="text/css">
+  
+  html {
+    padding-bottom: 1em;
+  }
+  
+  .col {
+    width: 45%;
+    margin-right: 5%;
+    float: left;
+    position: relative;
+  }
+  
+  .col > :first-child {
+    margin-top: 0;
+  }
+  
+  h1, h2, h3, h4, p, ul, ol {
+    margin: 10px 0;
+  }
+  
+  p, li {
+    position: relative;
+  }
+  
+  img {
+    margin-right: 20px;
+  }
+  
+  li img {
+    vertical-align: bottom;
+    margin-right: 4px;
+  }
+  
+  .fancy {
+    font-style: italic;
+  }
+  
+  .hover {
+    outline: 2px solid #f70;
+  }
+  
+  .selected {
+    outline: 2px solid #0a0;
+  }
+  
+  .active {
+    outline: 2px solid #00f;
+  }
+  
+  .error {
+    outline: 2px solid #f00;
+  }
+  
+  #log {
+    outline: none;
+  }
+  
+  #log:not(:empty) {
+    outline: 2px solid #0a0;
+    padding: 0 0.5em 0.5em;
+    font-weight: 700;
+  }
+  
+  #log:not(:empty):before {
+    content: "Logged messages";
+    display: block;
+    color: #fff;
+    background: #0a0;
+    padding: 0.2em 0.5em;
+    margin: 0 -0.5em 0.5em;
+  }
+  
+</style>
+</head>
+<body>
+
+<div id="col1" class="col first">
+  <h1>This is an H1 header</h1>
+  <h2>This is an H2 header</h2>
+  <h3 class="fancy first">This is an H3 header</h3>
+  
+  <div id="log"></div>
+  
+  <p id="paragraph1">Lorem ipsum dolor sit amet, <b>consectetur adipiscing elit</b>. Proin eget lorem dolor. Nulla urna neque, congue quis porttitor id, adipiscing et neque. <i>Lorem ipsum dolor sit amet, <a href="#sample1">consectetur</a> adipiscing elit.</i> Nulla interdum auctor felis aliquet vulputate. Vestibulum faucibus bibendum faucibus.</p>
+  <p id="paragraph2">Vivamus vel lectus et ligula vulputate mollis. Aliquam vehicula nisi in risus bibendum a tempus urna consectetur.</p>
+  <p id="paragraph3">Fusce tincidunt, <a href="#sample2">risus sed</a> molestie accumsan, ligula dui congue turpis, id rutrum dui est fringilla enim. Integer imperdiet purus sed sapien vehicula aliquet. Aliquam sodales, diam malesuada accumsan semper, massa erat tincidunt est, ac posuere nunc urna in magna. Integer quis semper neque.</p>
+  <p style="display:none">Morbi est tortor, congue nec dapibus sit amet, congue non mi. Nulla vulputate rutrum nisl ac varius. Cras faucibus eros vel justo vulputate in aliquet eros auctor.</p>
+  
+  <h3 class="second fancy">A Sample Form</h3>
+  <form action=".">
+    <label for="first">First</label>
+    <input type="text" name="first" id="first">
+    <label for="last">Last</label>
+    <input type="text" name="last" id="last">
+    <input type="checkbox" name="czech" value="1" checked>
+    <input type="checkbox" name="czech" value="2" checked>
+    <input type="radio" name="radical" value="foo">
+    <input type="radio" name="radical" value="bar" checked>
+    <input type="submit" value="Submit!">
+  </form>
+</div>
+
+<div id="col2" class="col last">
+  <h4 class="fancy">A few images: the <b>bocoup</b> mascot, the <b>jQuery</b> logo, and Chuck <b>&ldquo;JavaScript&rdquo;</b> Norris:</h4>
+  <img src="media/test/bob.png" alt="Bob">
+  <img src="media/test/jquery.png" alt="jQuery">
+  <img src="media/test/javascript.png" alt="JavaScript">
+  
+  <h3 class="third">An unordered list</h3>
+  <ul id="list1">
+    <li>This is the <a href="#first" id="a">first</a> list item</li>
+    <li>This is <i>the <a href="#second" id="b">second</a></i> list item</li>
+    <li>This is the <a href="#third" id="c">third</a> (last) list item</li>
+  </ul>
+  
+  <h3 class="fourth">Another unordered list</h3>
+  <ul id="list2">
+    <li>This is the <a href="#first" id="d">first</a> list item</li>
+    <li>This is <i>the <a href="#second" id="e">second</a></i> list item</li>
+    <li>This is the <a href="#third" id="f">third</a> (last) list item</li>
+  </ul>
+  
+  <h3 class="fifth">An ordered list</h3>
+  <ol id="list3">
+    <li>This is the <a href="#first" id="g">first</a> list item</li>
+    <li>This is <i>the <a href="#second" id="h">second</a></i> list item</li>
+    <li>This is the <a href="#third" id="i">third</a> (last) list item</li>
+  </ol>
+</div>
+
+
+
+</body>
+</html>

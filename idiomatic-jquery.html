@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Idiomatic jQuery</title>
+  <link type="text/css" rel="stylesheet" href="preso/sh/styles/shCoreDefault.css"/>
+  <link type="text/css" rel="stylesheet" href="preso/css/dzslides.css"/>
+  <link type="text/css" rel="stylesheet" href="preso/css/custom.css"/>
+  
+  <script type="text/javascript" src="preso/js/jquery.js"></script>
+  <script type="text/javascript" src="preso/sh/scripts/shCore.js"></script>
+  <script type="text/javascript" src="preso/sh/scripts/shAutoloader.js"></script>
+  <script type="text/javascript" src="preso/js/dzslides.js"></script>
+  <script type="text/javascript" src="preso/js/custom.js"></script>
+</head>
+<body>
+
+<section>
+  <h1>Idiomatic jQuery</h1>
+</section>
+
+<section>
+  <h1>&ldquo;Cowboy&rdquo; Ben Alman</h1>
+  <p><a href="http://benalman.com/">benalman.com</a></p>
+  <p><a href="http://github.com/cowboy/">github.com/cowboy</a></p>
+  <p><a href="http://twitter.com/cowboy">@cowboy</a></p>
+</section>
+
+<section>
+  <h1>bocoup</h1>
+  <img src="media/logo/bocoup-200.png" alt="bocoup">
+  <p style="padding-top:0.4em;"><a href="http://bocoup.com/">bocoup.com</a></p>
+</section>
+
+<section>
+  <h1>jQuery Core<br/>Style Guidelines</h1>
+  <aside>
+    <a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines">jQuery Core Style Guidelines</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Making Sure<br/>Your Code Runs</h1>
+</section>
+
+<section>
+  <h1>JSLint</h1>
+  <aside>
+    <a href="http://jslint.com/">jslint.com</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Test in Different<br/>Browsers</h1>
+</section>
+
+<section>
+  <h1>Chrome, Firefox, Safari</h1>
+  <ul>
+    <li>The best consoles</li>
+    <li>Already running!</li>
+  </ul>
+</section>
+
+<section>
+  <h1>Internet Explorer</h1>
+  <ul>
+    <li>Actually used by most people</li>
+    <li>Test with Virtual Machine <s>or Spoon.net</s></li>
+    <li>Install Microsoft Script Debugger</li>
+  </ul>
+  <aside>
+    <a href="http://spoon.net/browsers/">Spoon.net</a>
+    <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=2f465be0-94fd-4569-b3c4-dffdf19ccd99">Microsoft Script Debugger</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Maintainability</h1>
+</section>
+
+<section>
+  <h1>Consistent Style</h1>
+  <p class="hovers commalist">
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Spacing">Spacing</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Comments">Comments</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Equality">Equality</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Blocks">Blocks</a></span>
+    <br/>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Function_Calls">Function Calls</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Arrays_and_Objects">Arrays &amp; Objects</a></span>
+    <br/>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Assignment">Assignment</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Type_Checks">Type Checks</a></span>
+    <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Strings">Strings</a></span>
+  </p>
+</section>
+
+<section>
+  <h1>Adjust as Necessary</h1>
+</section>
+
+<section>
+  <h1>Collection Methods</h1>
+  <ul>
+    <li>should feel jQuery-like</li>
+    <li>should be called on a jQuery object</li>
+    <li>should chain</li>
+    <li>should implicitly iterate</li>
+  </ul>
+</section>
+
+<section>
+  <h1>Feeling jQuery-like</h1>
+  <p class="subhead">(Collection methods should be called on a jQuery object)</p>
+  <pre class="brush:js">
+    function enumerate( elems, start ) {
+      for ( var i = 0; i < elems.length; i++ ) {
+        elems.eq( i ).prepend( "<b>" + ( i + start ) + "</b> " );
+      }
+    };
+    
+    // This is no fun!
+    enumerate( $("li"), 1 );
+    
+    // Wouldn't you much rather do this?
+    $("li").enumerate( 1 );
+  </pre>
+</section>
+
+<section>
+  <h1>Methods should Chain</h1>
+  <pre class="brush:js">
+    // Create a new jQuery collection method.
+    
+    $.fn.enumerate = function() {
+      // Code goes here.
+    };
+    
+    // This doesn't error, but it does nothing and returns undefined.
+    $("li").enumerate();
+    
+    // Error: cannot call method 'css' of undefined!
+    $("li").enumerate().css( "color", "red" );
+    
+    
+    // A simple test.
+    
+    var elems = $("li");
+    
+    $.fn.enumerate = function() {
+      // What, exactly, is `this`? I have a nagging suspicion...
+      console.log( this === elems );
+    };
+    
+    // Logs true!
+    elems.enumerate();
+    
+    
+    // Create a chainable jQuery collection method.
+    
+    $.fn.enumerate = function() {
+      return this;
+    };
+    
+    // Does nothing, but returns the same jQuery object it was called on.
+    $("li").enumerate();
+    
+    // Because of this, it's chainable!
+    $("li").enumerate().css( "color", "red" );
+  </pre>
+</section>
+
+<section>
+  <h1>Implicit Iteration</h1>
+  <p class="subhead">(Plugins implicitly iterate&hellip; by explicitly iterating)</p>
+  <pre class="brush:js">
+    // No explicit iteration in the plugin...
+    
+    $.fn.enumerate = function( start ){
+      this.prepend( "<b>" + start + "</b> " );
+      return this;
+    };
+    
+    // ...means no implicit iteration when it's used.
+    
+    $("li").enumerate( 1 );
+    
+    
+    // Explicit iteration in the plugin...
+    
+    $.fn.enumerate = function( start ){
+      for ( var i = 0; i < this.length; i++ ) {
+        this.eq( i ).prepend( "<b>" + ( i + start ) + "</b> " );
+      }
+      
+      return this;
+    };
+    
+    // ...means implicit iteration when it's used!
+    
+    $("li").enumerate( 1 );
+    
+    
+    // But you should explicitly iterate using jQuery's .each().
+    
+    $.fn.enumerate = function( start ){
+      this.each(function(i){
+        $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+      });
+      
+      return this;
+    };
+    
+    
+    // Roll the return up to remove the extra, unnecessary line, and you
+    // have the basic "Chainable jQuery Collection Method" pattern:
+    
+    $.fn.enumerate = function( start ){
+      return this.each(function(i){
+        $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+      });
+    };
+  </pre>
+</section>
+
+<section>
+  <h1>Stack Manipulation</h1>
+  <p>How do you make a method &ldquo;end&rdquo;-able?</p>
+</section>
+
+<section>
+  <h1>The <code>.end</code> Method</h1>
+  <pre class="brush:js">
+    // In brief:
+    
+    $("ul").find( "li" ).addClass( "fancy" ).end().addClass( "selected" );
+    
+    
+    // Select all UL elements.
+    $("ul")
+      
+      // From there, find all LI descendants.
+      .find( "li" )
+        // Add a class to each selected LI element.
+        .addClass( "fancy" )
+        // Revert back to the previous collection.
+        .end()
+        
+      // Add a class to each selected UL element.
+      .addClass( "selected" );
+  </pre>
+  <aside>
+    <a href="http://api.jquery.com/end/"><code>.end()</code> method</a>
+    <a href="../jquery-source/jquery-1.4.4.js.html#318">jQuery 1.4.4 Source</a>
+  </aside>
+</section>
+
+<section>
+  <h1>The <code>.pushStack</code> Method</h1>
+  <pre class="brush:js">
+    // The most basic "end"-able collection method.
+    
+    $.fn.listitems = function() {
+      var elems = this.find( "li" );
+      return this.pushStack( elems );
+    };
+    
+    // Just like before!
+    
+    $("ul")
+      .listitems()
+        .addClass( "fancy" )
+        .end()
+      .addClass( "selected" );
+    
+    
+    // An "end"-able collection method with an optional selector.
+    
+    $.fn.listitems = function( selector ){
+      var elems = this.find( "li" );
+      
+      if ( selector ) {
+        elems = elems.filter( selector );
+      }
+      
+      return this.pushStack( elems, "listitems", selector || "" );
+    };
+    
+    // Fancy!
+    
+    $("ul")
+      .listitems( ":first-child" )
+        .addClass( "fancy" )
+        .end()
+      .addClass( "selected" );
+  </pre>
+  <aside>
+    <a href="http://api.jquery.com/pushStack/"><code>.pushStack()</code> method</a>
+    <a href="../jquery-source/jquery-1.4.4.js.html#242">jQuery 1.4.4 Source</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Getters &amp; Setters</h1>
+</section>
+
+<section>
+  <h1>Setting a Value</h1>
+  <pre class="brush:js">
+    // Our basic, chainable, "enumerate" method.
+    
+    $.fn.enumerate = function( start ) {
+      return this.each(function(i){
+        $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+      });
+    };
+    
+    // Enumerate the listitems, effectively "setting" values.
+    
+    $("li").enumerate( 1 );
+  </pre>
+</section>
+
+<section>
+  <h1>Getting a Value</h1>
+  <pre class="brush:js">
+    // Only return the appropriate value from the first selected element.
+    
+    $.fn.getEnumerateStartingValueOMGLongName = function() {
+      var val = this.eq( 0 ).children( "b" ).eq( 0 ).text();
+      return Number( val );
+    };
+    
+    // Because this doesn't return a jQuery object, it's not chainable!
+    
+    $("li").getEnumerateStartingValueOMGLongName();
+  </pre>
+  <aside>
+    <a href="https://github.com/brandonaaron/jquery.batch">Brandon Aaron's jQuery Batch Plugin</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Getting &amp; Setting</h1>
+  <pre class="brush:js class-name:l20">
+    // A jQuery collection method that both "sets" and "gets."
+    
+    $.fn.enumerate = function( start ) {
+      if ( typeof start !== "undefined" ) {
+        // Since `start` value was provided, enumerate and return
+        // the initial jQuery object to allow chaining.
+        
+        return this.each(function(i){
+          $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+        });
+        
+      } else {
+        // Since no `start` value was provided, function as a
+        // getter, returing the appropriate value from the first
+        // selected element.
+        
+        var val = this.eq( 0 ).children( "b" ).eq( 0 ).text();
+        return Number( val );
+      }
+    };
+  </pre>
+</section>
+
+<section>
+  <h1>Use a Closure</h1>
+  <pre class="brush:js">
+    // This is ok if it's just for you.
+    
+    $.fn.enumerate = function( start ){
+      return this.each(function(i){
+        $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+      });
+    };
+    
+    
+    // If you're sharing with others, you need to wrap your code
+    // in a closure.
+    
+    (function($){
+      
+      $.fn.enumerate = function( start ){
+        return this.each(function(i){
+          $(this).prepend( "<b>" + ( i + start ) + "</b> " );
+        });
+      };
+      
+    })(jQuery);
+    
+    
+    // Closures are great, because they allow you a private scope in
+    // which you can store "private" variables and functions.
+    
+    /*!
+     * jQuery Tiny Pub/Sub - v0.3pre - 11/4/2010
+     * http://benalman.com/
+     * 
+     * Copyright (c) 2010 "Cowboy" Ben Alman
+     * Dual licensed under the MIT and GPL licenses.
+     * http://benalman.com/about/license/
+     */
+     
+    (function($){
+      
+      var o = $({});
+      
+      $.subscribe = function(){
+        o.bind.apply( o, arguments );
+      };
+      
+      $.unsubscribe = function(){
+        o.unbind.apply( o, arguments );
+      };
+      
+      $.publish = function(){
+        o.trigger.apply( o, arguments );
+      };
+      
+    })(jQuery);
+  </pre>
+  <aside>
+    <a href="http://api.jquery.com/jQuery.noConflict/"><code>jQuery.noConflict()</code> method</a>
+    <a href="https://gist.github.com/661855">jQuery Tiny Pub/Sub Plugin</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Utility Methods</h1>
+</section>
+
+<section>
+  <h1>Utility, Yes. jQuery, No.</h1>
+  <pre class="brush:js class-name:l16">
+    // What's wrong with this "jQuery plugin"? Hint: it's not
+    // the code itself.
+    
+    (function($){
+      
+      $.log = function( msg ) {
+        if ( $.log.enabled && window.console ) {
+          console.log( msg );
+        }
+      };
+      
+      $.log.enabled = true;
+      
+    })(jQuery);
+    
+    
+    // Don't attach arbitrary methods to $ unless they're REALLY
+    // jQuery plugins.
+    
+    var log = (function(){
+      
+      function fn( msg ) {
+        if ( log.enabled && window.console ) {
+          console.log( msg );
+        }
+      };
+      
+      fn.enabled = true;
+      
+      return fn;
+      
+    })();
+  </pre>
+  <aside>
+    <a href="http://benalman.com/projects/javascript-debug-console-log/">JavaScript Debug</a>
+  </aside>
+</section>
+
+<section>
+  <h1>This One's Legit</h1>
+  <pre class="brush:js class-name:l16">
+    // This method will never be called on a collection of elements,
+    // it's just a utility method.
+    
+    $.deparam = function( str ) {
+      var obj = {};
+      
+      $.each( str.split( "&" ), function(i,pair){
+        var nv = pair.split( "=" );
+        obj[ nv[0] ] = nv[ 1 ];
+      });
+      
+      return obj;
+    };
+    
+    $.deparam( "a=1&b=2&c=3" ); // { a: "1", b: "2", c: "3" }
+  </pre>
+  <aside>
+    <a href="http://benalman.com/projects/jquery-bbq-plugin/">jQuery BBQ</a>
+    <a href="http://api.jquery.com/jQuery.param/"><code>jQuery.param()</code> method</a>
+    <a href="../jquery-source/jquery-1.4.4.js.html#6074">jQuery 1.4.4 Source</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Namespacing</h1>
+  <pre class="brush:js class-name:l20">
+    // For jQuery utility methods, this works.
+    
+    $.myPlugin = function() {
+      // Code goes here.
+    };
+    
+    $.myPlugin.submethod = function() {
+      // Code goes here.
+    };
+    
+    $.myPlugin();
+    $.myPlugin.submethod();
+    
+    
+    // For jQuery collection methods, this doesn't work.
+    
+    $.fn.myPlugin = function() {
+      // Code goes here.
+    };
+    
+    $.fn.myPlugin.submethod = function() {
+      // Code goes here.
+    };
+    
+    $("li").myPlugin();           // While this works great...
+    $("li").myPlugin.submethod(); // This ain't gonna happen.
+    
+    
+    // This kind of thing is also no good. It's technically possible
+    // (with a lot of work) but it's confusing. For example, how do
+    // you keep track of chaining? What does .end() do? No good.
+    
+    $("li").myPlugin().submethod();
+    
+    
+    // Of course you can do this (and a whole lot more), using the
+    // jQuery UI Widget Factory, and it works great.
+    
+    $("li").myPlugin( "submethod", options );
+    
+    
+    // But for jQuery collection methods, this is usually sufficient.
+    
+    $.fn.myPluginSubmethod = function() {
+      // Code goes here.
+    };
+    
+    $("li").myPluginSubmethod();
+  </pre>
+  <aside>
+    <a href="http://blog.nemikor.com/2010/05/15/building-stateful-jquery-plugins/">Building stateful jQuery plugins</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Recap</h1>
+  <ul>
+    <li>jQuery Core Style Guidelines</li>
+    <li>Utility Methods</li>
+    <li>Collection Methods
+      <ul class="smaller">
+        <li>Chaining, Implicit Iteration</li>
+        <li>Stack Manipulation</li>
+        <li>Getters &amp; Setters</li>
+      </ul>
+    </li>
+    <li>Namespacing</li>
+    <li>Use a Closure</li>
+  </ul>
+</section>
+
+
+</body>
+</html>

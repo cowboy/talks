@@ -1,0 +1,90 @@
+.preso body,
+html.preso  {
+  height: 100%;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.preso body {
+  margin: auto;
+  position: relative;
+}
+
+/* FIXME : Mandatory for flex box model, Firefox bug */
+/* See JS hack */
+
+.preso section > div {
+  width: 100%;
+  
+  display: -moz-box;
+  -moz-box-orient : vertical;
+  -moz-box-pack : center;
+  -moz-box-align : center;
+  
+  display: -webkit-box;
+  -webkit-box-orient : vertical;
+  -webkit-box-pack : center;
+  -webkit-box-align : center;
+}
+
+#footer {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  padding: 1em;
+  width: 100%;
+  display: none;
+}
+
+.preso #footer {
+  display: block;
+}
+
+.preso .flex-wrapper {
+  display: -moz-box;
+  display: -webkit-box;
+  -moz-box-orient: horizontal;
+  -webkit-box-orient: horizontal;
+  width: 100%;
+}
+
+#footer .flex-space {
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+}
+
+section {
+  display: none;
+}
+
+.no-preso section,
+.preso section {
+  display: block;
+}
+
+
+.preso section {
+  width: 100%;
+  margin: auto;
+  position: absolute;
+  padding: 0 10px;
+  opacity: 0;
+  
+  pointer-events: none;
+  
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  
+  -moz-transition-property: -moz-transform, opacity;
+  -moz-transition-duration: 1s, 1s;
+  -webkit-transition-property: -webkit-transform, opacity;
+  -webkit-transition-duration: 1s, 1s;
+}
+
+.preso section[aria-selected] {
+  pointer-events: auto;
+  opacity: 1;
+  -moz-transition-delay: 0.2s, 0.2s;
+  -webkit-transition-delay: 0.2s, 0.2s;
+}
