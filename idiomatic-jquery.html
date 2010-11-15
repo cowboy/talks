@@ -442,7 +442,7 @@
     (function($){
       
       $.log = function( msg ) {
-        if ( $.log.enabled && window.console ) {
+        if ( $.log.enabled &amp;&amp; window.console ) {
           console.log( msg );
         }
       };
@@ -458,7 +458,7 @@
     var log = (function(){
       
       function fn( msg ) {
-        if ( log.enabled && window.console ) {
+        if ( log.enabled &amp;&amp; window.console ) {
           console.log( msg );
         }
       };
@@ -483,7 +483,7 @@
     $.deparam = function( str ) {
       var obj = {};
       
-      $.each( str.split( "&" ), function(i,pair){
+      $.each( str.split( "&amp;" ), function(i,pair){
         var nv = pair.split( "=" );
         obj[ nv[0] ] = nv[ 1 ];
       });
@@ -491,7 +491,7 @@
       return obj;
     };
     
-    $.deparam( "a=1&b=2&c=3" ); // { a: "1", b: "2", c: "3" }
+    $.deparam( "a=1&amp;b=2&amp;c=3" ); // { a: "1", b: "2", c: "3" }
   </pre>
   <aside>
     <a href="http://benalman.com/projects/jquery-bbq-plugin/">jQuery BBQ</a>

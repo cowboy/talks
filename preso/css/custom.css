@@ -53,7 +53,7 @@ section {
 
 .no-preso body > section:last-of-type:after,
 .no-preso body > section:first-of-type:before {
-  content: "Copyright © 2010 “Cowboy” Ben Alman, licensed Attribution-NonCommercial 3.0";
+  content: "Copyright © 2010 “Cowboy” Ben Alman, licensed CC Attribution-NonCommercial 3.0";
   display: block;
   text-align: center;
   font-size: 14px;
