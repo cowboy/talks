@@ -17,19 +17,23 @@
 
 <section>
   <h1>Idiomatic jQuery</h1>
-</section>
-
-<section>
-  <h1>&ldquo;Cowboy&rdquo; Ben Alman</h1>
-  <p><a href="http://benalman.com/">benalman.com</a></p>
-  <p><a href="http://github.com/cowboy/">github.com/cowboy</a></p>
-  <p><a href="http://twitter.com/cowboy">@cowboy</a></p>
-</section>
-
-<section>
-  <h1>bocoup</h1>
-  <img src="media/logo/bocoup-200.png" alt="bocoup">
-  <p style="padding-top:0.4em;"><a href="http://bocoup.com/">bocoup.com</a></p>
+  <div style="width:820px;padding-top:1em" class="smaller">
+    <div style="width:300px;float:right">
+      <a href="http://bocoup.com/">
+        <img style="display:block;margin:0.4em auto 0" src="media/logo/bocoup-200.png" alt="bocoup">
+        <p style="margin:0">bocoup</p>
+      </a>
+    </div>
+    <div style="width:500px;float:right">
+      <h3 style="margin-bottom:0">&ldquo;Cowboy&rdquo; Ben Alman</h3>
+      <p class="smaller">
+        <a href="http://benalman.com/">benalman.com</a><br/>
+        <a href="http://github.com/cowboy/">github.com/cowboy</a><br/>
+        <a href="http://twitter.com/cowboy">@cowboy</a><br/>
+      </p>
+    </div>
+    <div style="clear:both"></div>
+  </div>
 </section>
 
 <section>
@@ -95,6 +99,45 @@
     <span><a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Strings">Strings</a></span>
   </p>
 </section>
+
+<section>
+  <h1>Inconsistent Style</h1>
+  <p class="subhead">(Just plain bad code)</p>
+  <pre class="brush:js">
+    function validateContactForm() {
+      var result = "";
+        if($('#contact_form #name').val()=="") {
+          result = false;
+          return false;
+        }    
+        if($("#contact_form").find('#address')[0].value!="")result=true;   
+        return result;
+    }
+    
+    function doesJQElementExistInDOM(jQueryElement)
+    {
+    	if(jQueryElement.length)
+    		return true;
+    	else
+    		return false;
+    }
+    
+    function show()
+    {
+        for (var i = 0; i < arguments.length; i++) {    	
+        	    jq(arguments[i]).show();  			
+        }
+    }
+
+    function hide()
+    {
+        for (var i = 0; i < arguments.length; i++) {    	
+        	jq(arguments[i]).hide();  			
+        }
+    }
+  </pre>
+</section>
+
 
 <section>
   <h1>Adjust as Necessary</h1>
@@ -380,7 +423,7 @@
     
     
     // If you're sharing with others, you need to wrap your code
-    // in a closure.
+    // in an IIFE (Immediately-Invoked Function Expression).
     
     (function($){
       
@@ -425,6 +468,7 @@
   </pre>
   <aside>
     <a href="http://api.jquery.com/jQuery.noConflict/"><code>jQuery.noConflict()</code> method</a>
+    <a href="http://benalman.com/news/2010/11/immediately-invoked-function-expression/">Immediately-Invoked Function Expression (IIFE)</a>
     <a href="https://gist.github.com/661855">jQuery Tiny Pub/Sub Plugin</a>
   </aside>
 </section>
@@ -560,8 +604,7 @@
 <section>
   <h1>Recap</h1>
   <ul>
-    <li>jQuery Core Style Guidelines</li>
-    <li>Utility Methods</li>
+    <li>Style Guidelines</li>
     <li>Collection Methods
       <ul class="smaller">
         <li>Chaining, Implicit Iteration</li>
@@ -569,8 +612,9 @@
         <li>Getters &amp; Setters</li>
       </ul>
     </li>
-    <li>Namespacing</li>
     <li>Use a Closure</li>
+    <li>Utility Methods</li>
+    <li>Namespacing</li>
   </ul>
 </section>
 
