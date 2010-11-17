@@ -1,6 +1,7 @@
 # My Talks #
 
  * [Idiomatic jQuery](http://benalman.com/talks/idiomatic-jquery.html)
+ * [jQuery Pluginization](http://benalman.com/talks/jquery-pluginization.html)
 
 _Note that these talks are best viewed in Firefox 4, until I can rewrite the CSS to be more cross-browser friendly._
 
