@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jQuery Pluginization</title>
+  <link type="text/css" rel="stylesheet" href="preso/sh/styles/shCoreDefault.css"/>
+  <link type="text/css" rel="stylesheet" href="preso/css/dzslides.css"/>
+  <link type="text/css" rel="stylesheet" href="preso/css/custom.css"/>
+  
+  <script type="text/javascript" src="preso/js/jquery.js"></script>
+  <script type="text/javascript" src="preso/sh/scripts/shCore.js"></script>
+  <script type="text/javascript" src="preso/sh/scripts/shAutoloader.js"></script>
+  <script type="text/javascript" src="preso/js/dzslides.js"></script>
+  <script type="text/javascript" src="preso/js/custom.js"></script>
+</head>
+<body>
+
+<section>
+  <h1>jQuery Pluginization</h1>
+  <div style="width:820px;padding-top:1em" class="smaller">
+    <div style="width:300px;float:right">
+      <a href="http://bocoup.com/">
+        <img style="display:block;margin:0.4em auto 0" src="media/logo/bocoup-200.png" alt="bocoup">
+        <p style="margin:0">bocoup</p>
+      </a>
+    </div>
+    <div style="width:500px;float:right">
+      <h3 style="margin-bottom:0">&ldquo;Cowboy&rdquo; Ben Alman</h3>
+      <p class="smaller">
+        <a href="http://benalman.com/">benalman.com</a><br/>
+        <a href="http://github.com/cowboy/">github.com/cowboy</a><br/>
+        <a href="http://twitter.com/cowboy">@cowboy</a><br/>
+      </p>
+    </div>
+    <div style="clear:both"></div>
+  </div>
+</section>
+
+<section>
+  <h1>Basic Functionality</h1>
+  <p class="subhead">(This is not very jQuery-like)</p>
+  <pre class="brush:js class-name:l20">
+    function longUrl( elem ) {
+      var href = elem.attr( "href" ),
+          api = "http://www.longurlplease.com/api/v1.1?callback=?";
+      
+      // Fetch JSON data.
+      jQuery.getJSON( api, { q: href }, function(data){
+        if ( data[ href ] ) {
+          // Update the element's title attribute.
+          elem.attr( "title", data[ href ] );
+        }
+      });
+    };
+    
+    // This is no fun!
+    longUrl( $("a") );
+    
+    // Wouldn't you much rather do this?
+    $("a").longUrl();
+  </pre>
+</section>
+
+<section>
+  <h1>More jQuery-Like</h1>
+  <p class="subhead">(Implicit iteration, chaining, amazing!)</p>
+  <pre class="brush:js class-name:l20">
+    jQuery.fn.longUrl = function() {
+      return this.each(function(){
+        var elem = jQuery(this),
+            href = elem.attr( "href" ),
+            api = "http://www.longurlplease.com/api/v1.1?callback=?";
+        
+        // Fetch JSON data.
+        jQuery.getJSON( api, { q: href }, function(data){
+          if ( data[ href ] ) {
+            // If the data is valid, update the element's title attribute.
+            elem.attr( "title", data[ href ] );
+          }
+        });
+      });
+    };
+    
+    // So much better!
+    $("a").longUrl().addClass( "yay-i-am-totally-chainable" );
+  </pre>
+  <aside>
+    <a href="http://benalman.com/talks/idiomatic-jquery.html">Idiomatic jQuery</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Consider Performance</h1>
+  <p class="subhead">(Don't <i>over</i>-optimize, just optimize)</p>
+  <pre class="brush:js class-name:l20 highlight:[1,2,10,14,17,18,19]">
+    // Store fetched long URLs here.
+    var cache = {};
+    
+    jQuery.fn.longUrl = function() {
+      return this.each(function(){
+        var elem = jQuery(this),
+            href = elem.attr( "href" ),
+            api = "http://www.longurlplease.com/api/v1.1?callback=?";
+        
+        if ( cache[ href ] ) {
+          // URL exists in cache, so use it.
+          elem.attr( "title", cache[ href ] );
+          
+        } else {
+          // Fetch JSON data.
+          jQuery.getJSON( api, { q: href }, function(data){
+            if ( data[ href ] ) {
+              // If the data is valid, update the cache.
+              cache[ href ] = data[ href ];
+              
+              // Update the element's title attribute.
+              elem.attr( "title", cache[ href ] );
+            }
+          });
+        }
+      });
+    };
+  </pre>
+  <aside>
+    <a href="https://github.com/brandonaaron/jquery-outerhtml/commit/cd2bca0d67d11358e5e02089028223637246e4b2">Over-optimizing can make code unreadable</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Use a Closure!</h1>
+  <p class="subhead">(Less global vars == less compatibility headaches)</p>
+  <pre class="brush:js class-name:l20 highlight:[1,31]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function() {
+        return this.each(function(){
+          var elem = $(this),
+              href = elem.attr( "href" ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          if ( cache[ href ] ) {
+            // URL exists in cache, so use it.
+            elem.attr( "title", cache[ href ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: href }, function(data){
+              if ( data[ href ] ) {
+                // If the data is valid, update the cache.
+                cache[ href ] = data[ href ];
+
+                // Update the element's title attribute.
+                elem.attr( "title", cache[ href ] );
+              }
+            });
+          }
+        });
+      };
+      
+    })(jQuery);
+  </pre>
+</section>
+
+<section>
+  <h1>Keep it DRY</h1>
+  <p class="subhead">(Why write something twice, when you can write it once?)</p>
+  <pre class="brush:js class-name:l20 highlight:[13,14,15,19,29]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function() {
+        return this.each(function(){
+          var elem = $(this),
+              href = elem.attr( "href" ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          // Lengthen the element's URL.
+          function lengthen( url ) {
+            elem.attr( "title", url );
+          };
+          
+          if ( cache[ href ] ) {
+            // URL exists in cache, so use it.
+            lengthen( cache[ href ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: href }, function(data){
+              if ( data[ href ] ) {
+                // If the data is valid, update the cache.
+                cache[ href ] = data[ href ];
+
+                // Update the element's title attribute.
+                lengthen( cache[ href ] );
+              }
+            });
+          }
+        });
+      };
+      
+    })(jQuery);
+  </pre>
+</section>
+
+<section>
+  <h1>Options</h1>
+  <p class="subhead">(Sensible parameterization == less editing, down the road)</p>
+  <pre class="brush:js class-name:l20 highlight:[6,9]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function( attr ) {
+        return this.each(function(){
+          var elem = $(this),
+              url = elem.attr( attr || "href" ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          // Lengthen the element's URL.
+          function lengthen( url ) {
+            elem.attr( "title", url );
+          };
+          
+          if ( cache[ url ] ) {
+            // URL exists in cache, so use it.
+            lengthen( cache[ url ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: url }, function(data){
+              if ( data[ url ] ) {
+                // If the data is valid, update the cache.
+                cache[ url ] = data[ url ];
+
+                // Update the element's title attribute.
+                lengthen( cache[ url ] );
+              }
+            });
+          }
+        });
+      };
+      
+    })(jQuery);
+  </pre>
+</section>
+
+<section>
+  <h1>More Options</h1>
+  <p class="subhead">(There <i>must</i> be a better way than this)</p>
+  <pre class="brush:js class-name:l20 highlight:[7,8,9,10,11,12,14,15,16,17]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function( attr, lengthen ) {
+        // If only one argument is passed, and that argument is a function,
+        // it must be `lengthen, so `attr` must have been omitted.
+        if ( $.isFunction( attr ) ) {
+          lengthen = attr;
+          attr = null;
+        }
+        
+        // If lengthen is not set, use a default function.
+        lengthen = lengthen || function( elem, url ) {
+          elem.attr( "title", url );
+        };
+        
+        return this.each(function(){
+          var elem = $(this),
+              url = elem.attr( attr || "href" ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          if ( cache[ url ] ) {
+            // URL exists in cache, so use it.
+            lengthen( elem, cache[ url ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: url }, function(data){
+              if ( data[ url ] ) {
+                // If the data is valid, update the cache.
+                cache[ url ] = data[ url ];
+                
+                // Update the element's title attribute.
+                lengthen( elem, cache[ url ] );
+              }
+            });
+          }
+        });
+      };
+      
+    })(jQuery);
+  </pre>
+</section>
+
+<section>
+  <h1>Better Options</h1>
+  <p class="subhead">(This is the better way)</p>
+  <pre class="brush:js class-name:l20 highlight:[7,8,9,10,11,12,13,15,16]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function( options ) {
+        // Some sensible defaults.
+        var defaults = {
+          attr: 'href',
+          lengthen: function( elem, url ) {
+            elem.attr( "title", url );
+          }
+        };
+        
+        // Override defaults with specified options.
+        options = $.extend( {}, defaults, options );
+        
+        return this.each(function(){
+          var elem = $(this),
+              url = elem.attr( options.attr ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          if ( cache[ url ] ) {
+            // URL exists in cache, so use it.
+            options.lengthen( elem, cache[ url ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: url }, function(data){
+              if ( data[ url ] ) {
+                // If the data is valid, update the cache.
+                cache[ url ] = data[ url ];
+                
+                // Update the element's title attribute.
+                options.lengthen( elem, cache[ url ] );
+              }
+            });
+          }
+        });
+      };
+      
+    })(jQuery);
+  </pre>
+  <aside>
+    <a href="http://api.jquery.com/jQuery.extend/"><code>jQuery.extend()</code> method</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Best Options!</h1>
+  <p class="subhead">(Options can be overriden both globally <i>and</i> per-call)</p>
+  <pre class="brush:js class-name:l20 highlight:[7,8,34,35,36,37,38,39,40]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function( options ) {
+        // Override defaults with specified options.
+        options = $.extend( {}, $.fn.longUrl.options, options );
+        
+        return this.each(function(){
+          var elem = $(this),
+              url = elem.attr( options.attr ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          if ( cache[ url ] ) {
+            // URL exists in cache, so use it.
+            options.lengthen( elem, cache[ url ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: url }, function(data){
+              if ( data[ url ] ) {
+                // If the data is valid, update the cache.
+                cache[ url ] = data[ url ];
+                
+                // Update the element's title attribute.
+                options.lengthen( elem, cache[ url ] );
+              }
+            });
+          }
+        });
+      };
+      
+      // Some sensible defaults.
+      $.fn.longUrl.options = {
+        attr: 'href',
+        lengthen: function( elem, url ) {
+          elem.attr( "title", url );
+        }
+      };
+      
+    })(jQuery);
+  </pre>
+</section>
+
+<section>
+  <h1>Even more jQuery-Like</h1>
+  <p class="subhead">(How can the lengthen callback be improved?)</p>
+  <pre class="brush:js class-name:l20 highlight:[17,27,37,38,39]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.fn.longUrl = function( options ) {
+        // Override defaults with specified options.
+        options = $.extend( {}, $.fn.longUrl.options, options );
+        
+        return this.each(function(){
+          var that = this,
+              url = $(this).attr( options.attr ),
+              api = "http://www.longurlplease.com/api/v1.1?callback=?";
+          
+          if ( cache[ url ] ) {
+            // URL exists in cache, so use it.
+            options.lengthen.call( that, cache[ url ] );
+            
+          } else {
+            // Fetch JSON data.
+            $.getJSON( api, { q: url }, function(data){
+              if ( data[ url ] ) {
+                // If the data is valid, update the cache.
+                cache[ url ] = data[ url ];
+                
+                // Update the element's title attribute.
+                options.lengthen.call( that, cache[ url ] );
+              }
+            });
+          }
+        });
+      };
+      
+      // Some sensible defaults.
+      $.fn.longUrl.options = {
+        attr: 'href',
+        lengthen: function( url ) {
+          $(this).attr( "title", url );
+        }
+      };
+      
+    })(jQuery);
+  </pre>
+  <aside>
+    <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/call">JavaScript <code>.call()</code> method</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Even more Generalized</h1>
+  <p class="subhead">(The only thing left out is <code>$.kitchenSink</code>)</p>
+  <pre class="brush:js class-name:l20 highlight:[6,36,37,38]">
+    (function($){
+      
+      // Store fetched long URLs here.
+      var cache = {};
+      
+      $.longUrl = function( url, callback ) {
+        var api = "http://www.longurlplease.com/api/v1.1?callback=?";
+        
+        if ( cache[ url ] ) {
+          // URL exists in cache, so use it.
+          callback( cache[ url ] );
+          
+        } else {
+          // Fetch JSON data.
+          $.getJSON( api, { q: url }, function(data){
+            if ( data[ url ] ) {
+              // If the data is valid, update the cache.
+              cache[ url ] = data[ url ];
+              
+              // Call `callback` for this element + long url.
+              callback( cache[ url ] );
+            }
+          });
+        }
+      }
+      
+      $.fn.longUrl = function( options ) {
+        // Override defaults with specified options.
+        options = $.extend( {}, $.fn.longUrl.options, options );
+        
+        return this.each(function(){
+          var that = this,
+              url = $(this).attr( options.attr );
+          
+          // Fetch long URL and call `lengthen` when done.
+          $.longUrl( url, function( long_url ){
+            options.lengthen.call( that, long_url );
+          });
+        });
+      };
+      
+      // Some sensible defaults.
+      $.fn.longUrl.options = {
+        attr: 'href',
+        lengthen: function( url ) {
+          $(this).attr( "title", url );
+        }
+      };
+      
+    })(jQuery);
+  </pre>
+  <aside>
+    <a href="http://benalman.com/projects/jquery-longurl-plugin/">jQuery longUrl plugin</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Recap</h1>
+  <ul>
+    <li>Implicit Iteration &amp; Chaining</li>
+    <li>Keep your privates private by using a closure</li>
+    <li>Keep things DRY, don't repeat yourself</li>
+    <li>Optimize, but don't <i>over</i>-optimize</li>
+    <li>Sensible Options
+      <ul>
+        <li>Use <code>$.extend()</code> and an options object</li>
+        <li>Make your options globally accessible</li>
+      </ul>
+    </li>
+    <li>Extrapolate into utility methods, if it makes sense</li>
+  </ul>
+</section>
+
+
+</body>
+</html>
