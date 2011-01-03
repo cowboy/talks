@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QUnit Callbacks</title>
+  <link rel="stylesheet" href="qunit.css" type="text/css">
+  <script src="qunit.js"></script>
+  <script type="text/javascript">
+
+  // Runs once at the very beginning.
+
+  QUnit.begin = function() {
+    console.log( "Running Test Suite" );
+  };
+
+  // Runs once at the very end.
+
+  QUnit.done = function( failures, total ) {
+    console.info( "Suite: %d failures / %d tests", failures, total );
+  };
+
+  // Runs once after each assertion.
+
+  QUnit.log = function( result, message ) {
+    console[ result ? "log" : "error" ]( message );
+  };
+
+  // Runs before each test.
+
+  QUnit.testStart = function( name ) {
+    console.group( "Test: " + name );
+  };
+
+  // Runs after each test.
+
+  QUnit.testDone = function( name, failures, total ) {
+    console.info( "Test: %d failures / %d tests", failures, total );
+    console.groupEnd();
+  };
+
+  // Runs before each module.
+
+  QUnit.moduleStart = function( name ) {
+    console.group( "Module: " + name );
+  };
+
+  // Runs after each module.
+
+  QUnit.moduleDone = function( name, failures, total ) {
+    console.info( "Module: %d failures / %d tests", failures, total );
+    console.groupEnd();
+  };
+
+  // Runs after each test group. Redefining this function will
+  // override the built-in #qunit-fixture reset logic.
+
+  QUnit.reset = function() {
+    console.log( "Test done!" );
+  };
+
+  module( "foo" );
+
+  test( "a test in the foo module", function() {
+    ok( true, "this test will pass" );
+  });
+
+  test( "another test in the foo module", function() {
+    ok( true, "this test will pass" );
+  });
+
+  </script>
+</head>
+<body>
+  <h1 id="qunit-header">QUnit Callbacks</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture"></div>
+</body>
+</html>

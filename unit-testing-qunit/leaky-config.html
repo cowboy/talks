@@ -7,6 +7,8 @@
   <script src="jquery.js"></script>
   <script type="text/javascript">
 
+  QUnit.config.noglobals = true;
+
   test( "not leaky", 1, function() {
     var x = true;
     ok( x, "passes because x is true" );
@@ -15,6 +17,12 @@
   test( "leaky", 1, function() {
     x = true;
     ok( x, "also passes because x is true" );
+  });
+
+  test( "leaks-r-bad", 1, function() {
+    raises( function() {
+      x // ReferenceError: x is not defined
+    }, "this would pass if the last test didn't leak x into the global scope" );
   });
 
   </script>
