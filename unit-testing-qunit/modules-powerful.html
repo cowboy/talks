@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>More Powerful Modules</title>
+  <link rel="stylesheet" href="qunit.css" type="text/css">
+  <script src="qunit.js"></script>
+  <script src="jquery.js"></script>
+  <script type="text/javascript">
+
+  // Defining a "setup" callback.
+
+  module( "module1", {
+    setup: function() {
+      ok( true, "once extra assert per test" );
+    }
+  });
+
+  test( "test with setup", function() {
+    expect( 1 );
+  });
+
+
+  // Defining both "setup" and "teardown" callbacks.
+
+  module( "module2", {
+    setup: function() {
+      ok( true, "once extra assert per test" );
+      this.prop = "foo";
+    },
+    teardown: function() {
+      ok( true, "and one extra assert after each test" );
+    }
+  });
+
+  test( "test with setup and teardown", function() {
+    expect( 3 );
+    same( this.prop, "foo", "this.prop === 'foo' in all tests" );
+  });
+
+
+  // Since callbacks aren't defined, expectations aren't incremented.
+
+  module( "module3" );
+
+  test( "test with neither setup nor teardown", function() {
+    expect( 1 );
+    strictEqual( this.prop, undefined, "this is a per-module object" )
+  });
+
+  </script>
+</head>
+<body>
+  <h1 id="qunit-header">More Powerful Modules</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture"></div>
+</body>
+</html>

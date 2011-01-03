@@ -97,10 +97,20 @@ section table {
 }
 
 section a {
-  color: #fff;
-  text-decoration: none;
+  color: #A4B2BC;
   -moz-transition: all 0.5s;
   -webkit-transition: all 0.5s;
+  padding: 0 0.4em;
+  -moz-border-radius: 0.6em;
+  -webkit-border-radius: 0.6em;
+  border-radius: 0.6em;
+}
+
+section .hovers a:hover,
+section a:hover {
+  background: #fff;
+  color: #047;
+  text-shadow: 0px -2px 0px #eee;
 }
 
 section h1 {
@@ -218,10 +228,15 @@ section aside {
 section aside,
 section aside a {
   color: #A4B2BC;
+  text-decoration: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 section aside a:hover {
   color: #fff;
+  background: none;
+  text-shadow: 0px -2px 0px #374683;
 }
 
 section aside a:not(:first-child):before {
@@ -241,6 +256,11 @@ section aside br + a:before {
 
 section .hovers {
   position: relative;
+}
+
+section .hovers a {
+  text-decoration: none;
+  color: #fff;
 }
 
 section .hovers span,
@@ -275,8 +295,20 @@ section .hovers:hover span[data-title]:hover:after {
 
 /* Comma list */
 
-section .commalist span:not(:last-child):after {
-  content: ",";
+section .commalist span:not(:first-child):before {
+  content: "•";
+  padding-right: 0.2em;
+  color: #fff;
+  opacity: 0.3;
+}
+
+section .commalist span:hover:before {
+  opacity: 0.05;
+}
+
+section .commalist br + span:before {
+  content: "" !important;
+  padding: 0 !important;
 }
 
 /* Code blocks / Syntax Highlighter */
