@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Not-Atomic Tests = Bad</title>
+  <link rel="stylesheet" href="qunit.css" type="text/css">
+  <script src="qunit.js"></script>
+  <script src="jquery.js"></script>
+  <script type="text/javascript">
+
+  // Don't do this.
+
+  var counter = 0;
+
+  test( "first test", 1, function(){
+    counter++;
+    equal( counter, 1, "counter should be 1" );
+  });
+
+  test( "second test", 1, function(){
+    counter++;
+    equal( counter, 2, "counter should be 2" );
+  });
+
+  test( "third test", 2, function(){
+    counter++;
+    equal( counter, 2, "counter should be 2" );
+    ok( false, "oops, an error" );
+  });
+
+  </script>
+</head>
+<body>
+  <h1 id="qunit-header">Not-Atomic Tests = Bad</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture"></div>
+</body>
+</html>

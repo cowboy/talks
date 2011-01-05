@@ -94,7 +94,7 @@
   test( "multiple async w/ counter", function() {
     expect( 4 );
 
-    stop( 2000 );
+    stop();
 
     // Only call start() when counter is 0.
     var counter = 2;
@@ -112,6 +112,26 @@
       ok( data, "data is returned from the server" );
       equal( data.b, "2", "the value of data.b should be 2" );
       done();
+    });
+  });
+
+  test( "multiple async w/ multiple stops", function() {
+    expect( 4 );
+
+    var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
+
+    stop();
+    $.getJSON( url, { a: 1 }, function( data ) {
+      ok( data, "data is returned from the server" );
+      equal( data.a, "1", "the value of data.a should be 1" );
+      start();
+    });
+
+    stop();
+    $.getJSON( url, { b: 2 }, function( data ) {
+      ok( data, "data is returned from the server" );
+      equal( data.b, "2", "the value of data.b should be 2" );
+      start();
     });
   });
 

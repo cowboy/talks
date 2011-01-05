@@ -2,8 +2,9 @@
 
  * [Idiomatic jQuery](http://benalman.com/talks/idiomatic-jquery.html)
  * [jQuery Pluginization](http://benalman.com/talks/jquery-pluginization.html)
+ * [Unit Testing with QUnit](http://benalman.com/talks/unit-testing-qunit.html)
 
-_Note that these talks are best viewed in Firefox 4, until I can rewrite the CSS to be more cross-browser friendly._
+_Note that these talks are best viewed in Firefox 4, until I can rewrite the CSS/JS to be more cross-browser friendly._
 
 ## Other Links ##
 

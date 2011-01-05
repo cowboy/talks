@@ -1,101 +1,100 @@
-
 /*
-************************************
-*                                  *
-*            JAVASCRIPT            *
-*  (You don't have to read this)   *
-************************************
-*/
+ * jQuery hashchange event - v1.3 - 7/21/2010
+ * http://benalman.com/projects/jquery-hashchange-plugin/
+ * 
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+(function($,e,b){var c="hashchange",h=document,f,g=$.event.special,i=h.documentMode,d="on"+c in e&&(i===b||i>7);function a(j){j=j||location.href;return"#"+j.replace(/^[^#]*#?(.*)$/,"$1")}$.fn[c]=function(j){return j?this.bind(c,j):this.trigger(c)};$.fn[c].delay=50;g[c]=$.extend(g[c],{setup:function(){if(d){return false}$(f.start)},teardown:function(){if(d){return false}$(f.stop)}});f=(function(){var j={},p,m=a(),k=function(q){return q},l=k,o=k;j.start=function(){p||n()};j.stop=function(){p&&clearTimeout(p);p=b};function n(){var r=a(),q=o(m);if(r!==m){l(m=r,q);$(e).trigger(c)}else{if(q!==m){location.href=location.href.replace(/#.*/,"")+q}}p=setTimeout(n,$.fn[c].delay)}$.browser.msie&&!d&&(function(){var q,r;j.start=function(){if(!q){r=$.fn[c].src;r=r&&r+a();q=$('<iframe tabindex="-1" title="empty"/>').hide().one("load",function(){r||l(a());n()}).attr("src",r||"javascript:0").insertAfter("body")[0].contentWindow;h.onpropertychange=function(){try{if(event.propertyName==="title"){q.document.title=h.title}}catch(s){}}}};j.stop=k;o=function(){return a(q.location.href)};l=function(v,s){var u=q.document,t=$.fn[c].domain;if(v!==s){u.title=h.title;u.open();t&&u.write('<script>document.domain="'+t+'"<\/script>');u.close();q.location.hash=v}}})();return j})()})(jQuery,this);
 
-function init() {
-  var firstFrame = window.location.hash? parseInt(window.location.hash.split("#")[1], 10) : 1;
-  var title = document.querySelector("title").textContent;
-  var slides = document.querySelectorAll("body > section");
-  for (var i = 1, il = slides.length; i <= il; i++) {
-    // FIXME : Mandatory for flex box model for vertical align
-    // Firefox bug :(
-    slides[i - 1].innerHTML = "<div>" + slides[i - 1].innerHTML + "</div>";
-    
-    var h = document.querySelector("section:nth-of-type("+ i +") > div > :first-child");
-    var t = title + ' - ' + $(h).text() + ' [' + i + '/' + il + ']';
-    
-    window.history[(i == 1? 'replace' : 'push') + 'State'](i, t, "#"+i);
-    document.title = t;
-  }
-  
-  document.title = title;
+(function($){
 
-  var footer = document.createElement("footer");
-  footer.id = "footer";
-  footer.innerHTML = 
-    '<div class="flex-wrapper"><p>' + title + '</p>' +
-    '<p class="flex-space"></p>' + 
-    '<p id="index"><span class="pagenumber"></span> / ' + il +'</p>';
-  document.body.appendChild(footer);
-  history.go(- slides.length + firstFrame);
+  var win = $(window),
+      hash,
+      max,
+      style,
+      styleProp;
 
+  win
+    .hashchange(function(e){
+      hash = location.hash.replace( /^#/, '' ) || 1;
 
-  window.addEventListener("popstate", function(e) {
-    if(e.state) {
-      var old = document.querySelector("section[aria-selected]");
-      var next = document.querySelector("section:nth-of-type("+ e.state +")");
+      var last = $('section[aria-selected]'),
+          next = $('body > section').eq( hash - 1 ),
+          tmp;
 
-      if (old) {
-        old.removeAttribute("aria-selected");
-        if (old.hasAttribute("data-onunload")) {
-          window[old.getAttribute("data-onunload")].call(window, old);
+      if ( last ) {
+        last.removeAttr( 'aria-selected' );
+        if ( tmp = last.data( 'onunload' ) ) {
+          window[ tmp ].call( last );
         }
       }
 
-      if (next) {
-        next.setAttribute("aria-selected", "true");
-        if (next.hasAttribute("data-onload")) {
-          window[next.getAttribute("data-onload")].call(window, next);
+      if ( next ) {
+        next.attr( 'aria-selected', 'true' );
+        if ( tmp = next.data( 'onunload' ) ) {
+          window[ tmp ].call( next );
         }
       }
 
+      $('#index .pagenumber').html( hash );
+    })
+    .resize(function(){
+      if ( !style ) {
+        if ( $.browser.msie ) { // ie is awesome
+          style = document.createStyleSheet();
+          styleProp = 'cssText';
+        } else {
+          style = $('<style rel="stylesheet" type="text/css"/>')[0];
+          styleProp = typeof document.body.style.WebkitAppearance === 'string' ? 'innerText' : 'innerHTML';
+        }
 
-      var index = document.querySelector("#index .pagenumber");
-      index.innerHTML = e.state;
-    }
-  }, true); 
-}
+        $(style).appendTo( 'head' );
+      }
 
-function resize() {
-  var style = document.getElementById("resizeStyle");
-  if (!style) {
-    style = document.createElement("style");
-    style.id = "resizeStyle";
-    document.head.appendChild(style);
-  }
-  style.textContent = "body>section>div {height: "+ window.innerHeight +"px}";
-}
+      style[ styleProp ] = 'body > section > div { height: ' + win.height() +'px; }';
+    })
+    .keydown(function(e){
+      var keyCode = e.keyCode,
+          newHash;
 
-window.addEventListener("resize", resize, true);
-window.addEventListener("load", resize, true);
-window.addEventListener("load", init, true);
+      if ( e.altKey || e.ctrlKey || e.metaKey || e.shiftKey ) {
+        return;
+      }
 
-// Webkit bug
-// window.addEventListener("hashchange", init, true); // FIXME Webkit fires hashchange when it shouldn't
-window.addEventListener("keydown", function(e) {
-  // Don't intercept keyboard shortcuts
-  if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
-    return;
-  }
-  if (   /*e.keyCode == 80 // p
-      || e.keyCode == 66 // b
-      ||*/ e.keyCode == 37 // left arrow
-      //|| e.keyCode == 33 // page up
-  ) {
-    e.preventDefault();
-    history.back();
-  }
-  if (   /*e.keyCode == 78 // n
-      ||*/ e.keyCode == 32 // space
-      || e.keyCode == 39 // right arrow
-      //|| e.keyCode == 34 // page down
-  ) {
-    e.preventDefault();
-    history.forward();
-  }
-}, true);
+      if ( keyCode === 37 ) {
+        newHash = +hash - 1;
+      } else if ( keyCode == 32 || keyCode == 39 ) {
+        newHash = +hash + 1;
+      }
+
+      if ( newHash !== undefined ) {
+        if ( newHash && newHash <= max ) {
+          location.hash = '#' + newHash;
+        }
+        e.preventDefault();
+      }
+    })
+
+    $(function(){
+      var slides = $('body > section'),
+          title = $('title').text();
+
+      max = slides.length;
+
+      slides.each(function(){
+        $(this).wrapInner( '<div/>' );
+      });
+
+      $('<footer id="footer"/>')
+        .html(
+          '<div class="flex-wrapper"><p>' + title + '</p>' +
+          '<p class="flex-space"></p>' +
+          '<p id="index"><span class="pagenumber"></span> / ' + max +'</p>'
+        )
+        .appendTo( 'body' );
+
+      win.hashchange().resize();
+    });
+})(jQuery);

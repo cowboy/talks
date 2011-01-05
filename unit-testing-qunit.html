@@ -117,29 +117,8 @@
 </section>
 
 <section>
-  <h1>Write Testable Code</h1>
-</section>
-
-<section>
-  <h1>Not Good.</h1>
-  <p class="subhead">You can't easily unit test this.</p>
-  <pre class="brush:js">
-    (function($){
-
-      $.fn.myplugin = function() {
-        // TODO: write this
-      };
-
-    })(jQuery);
-  </pre>
-</section>
-
-<section>
-  <h1>Much Better.</h1>
-  <p class="subhead"></p>
-  <pre class="brush:js">
-    // TODO: write this
-  </pre>
+  <h1>Write Testable Code!</h1>
+  <p>Separate your code into small,<br>individually testable parts.</p>
 </section>
 
 <section>
@@ -402,6 +381,35 @@
 </section>
 
 <section>
+  <h1>Tests Should be Atomic</h1>
+  <p class="subhead">And execution order cannot be guaranteed!</p>
+  <pre class="brush:js class-name:l20">
+    // Don't do this.
+
+    var counter = 0;
+
+    test( "first test", 1, function(){
+      counter++;
+      equal( counter, 1, "counter should be 1" );
+    });
+
+    test( "second test", 1, function(){
+      counter++;
+      equal( counter, 2, "counter should be 2" );
+    });
+
+    test( "third test", 2, function(){
+      counter++;
+      equal( counter, 2, "counter should be 2" );
+      ok( false, "oops, an error" );
+    });
+  </pre>
+  <aside>
+    <a href="unit-testing-qunit/atomic.html">Run these tests in QUnit</a>
+  </aside>
+</section>
+
+<section>
   <h1>DOM Testing</h1>
 </section>
 
@@ -437,7 +445,7 @@
 </section>
 
 <section>
-  <h1>A Sample Plugin &ldquo;Test Suite&rdquo;</h1>
+  <h1>A Plugin &ldquo;Test Suite&rdquo;</h1>
   <p class="subhead">Sometimes it really is this simple.</p>
   <pre class="brush:js class-name:l20">
     test( "enumerate()", 4, function() {
@@ -664,7 +672,7 @@
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?stop w%2F timeout">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?stop%20w%2F%20timeout">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -675,7 +683,7 @@
 
 <section>
   <h1>The Wrong Way</h1>
-  <p class="subhead">Don't do this! Why? It will wait for two seconds, <i>regardless</i>.</p>
+  <p class="subhead">Because this test is <i>done</i> after two seconds, regardless.</p>
   <pre class="brush:js class-name:l20">
     asyncTest( "multiple async w/ setTimeout", function() {
       expect( 4 );
@@ -702,12 +710,12 @@
 
 <section>
   <h1>A Better Way</h1>
-  <p class="subhead">While the timeout is set for two seconds, the test <i>may</i> continue before that.</p>
+  <p class="subhead">This test is done when it's <i>done</i>.</p>
   <pre class="brush:js class-name:l20">
     test( "multiple async w/ counter", function() {
       expect( 4 );
 
-      stop( 2000 );
+      stop();
 
       // Only call start() when counter is 0.
       var counter = 2;
@@ -730,6 +738,90 @@
   </pre>
   <aside>
     <a href="unit-testing-qunit/asynchronous.html?multiple%20async%20w%2F%20counter">Run this test in QUnit</a>
+  </aside>
+</section>
+
+<section>
+  <h1>The Best Way</h1>
+  <p class="subhead">Jörn added this one in... because I asked nicely.</p>
+  <pre class="brush:js class-name:l20">
+    test( "multiple async w/ multiple stops", function() {
+      expect( 4 );
+
+      var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
+
+      stop();
+      $.getJSON( url, { a: 1 }, function( data ) {
+        ok( data, "data is returned from the server" );
+        equal( data.a, "1", "the value of data.a should be 1" );
+        start();
+      });
+
+      stop();
+      $.getJSON( url, { b: 2 }, function( data ) {
+        ok( data, "data is returned from the server" );
+        equal( data.b, "2", "the value of data.b should be 2" );
+        start();
+      });
+    });
+  </pre>
+  <aside>
+    <a href="unit-testing-qunit/asynchronous.html?multiple%20async%20w%2F%20multiple%20stops">Run this test in QUnit</a>
+  </aside>
+</section>
+
+<section>
+  <h1>Simulate AJAX</h1>
+  <p>What are you testing anyways, your<br>client code or your server code?</p>
+</section>
+
+<section>
+  <h1>Mockjax</h1>
+  <p class="subhead">Mock Your Ajax Requests with Mockjax for Rapid Development</p>
+  <pre class="brush:js class-name:l20">
+    // Simulate your API.
+
+    $.mockjax({
+      url: '/user',
+      contentType: 'text/json',
+      responseText: {
+        status: -1
+      }
+    });
+
+    $.mockjax({
+      url: '/user/*',
+      contentType: 'text/json',
+      responseText: {
+        status: 1,
+        user: 'sample user'
+      }
+    });
+
+    // Unit tests.
+
+    test( "user tests", function() {
+      expect( 4 );
+
+      stop();
+      $.getJSON( "/user", function( data ) {
+        ok( data, "data is returned from the server" );
+        equal( data.status, "-1", "no user specified, status should be -1" );
+        start();
+      });
+
+      stop();
+      $.getJSON( "/user/123", function( data ) {
+        ok( data, "data is returned from the server" );
+        equal( data.status, "1", "user found, status should be 1" );
+        start();
+      });
+    });
+  </pre>
+  <aside>
+    <a href="unit-testing-qunit/mocked-ajax.html">Run mocked tests in QUnit</a>
+    <a href="http://enterprisejquery.com/2010/07/mock-your-ajax-requests-with-mockjax-for-rapid-development/">Mockjax documentation</a>
+    <a href="https://github.com/appendto/jquery-mockjax">Mockjax on GitHub</a>
   </aside>
 </section>
 
@@ -768,8 +860,8 @@
       <td><a href="unit-testing-qunit/assertions.html?ok">assertions.html?ok</a></td>
     </tr>
     <tr>
-      <td>&ldquo;ok&rdquo; &amp &ldquo;equal&rdquo; tests</td>
-      <td><a href="unit-testing-qunit/assertions.html?ok&equal">assertions.html?ok&equal</a></td>
+      <td>&ldquo;ok&rdquo; &amp; &ldquo;equal&rdquo; tests</td>
+      <td><a href="unit-testing-qunit/assertions.html?ok&equal">assertions.html?ok&amp;equal</a></td>
     </tr>
   </table>
 </section>
@@ -871,53 +963,15 @@
 </section>
 
 <section>
-  <h1>Extensions</h1>
-  <p class="subhead"></p>
+  <h1>QUnit Recap</h1>
+  <ul>
+    <li>Write testable code</li>
+    <li>Tests should be atomic</li>
+    <li>Organize tests into modules</li>
+    <li>Simulate your AJAX</li>
+    <li>It's only three files!</li>
+  </ul>
 </section>
-
-
-<!--
-Ben Alman will be speaking about the importance of JavaScript unit testing, and how your jQuery and JavaScript code can benefit from unit tests. In addition to outlining how both test- and behavior-driven development approaches work, Ben will also talk about functional JavaScript unit testing, and walk through the development of a QUnit testing suite.
-
-What is QUnit?
-Testing with multiple versions of jQuery (plugin devs)
-
-Getting QUnit
-  https://github.com/jquery/qunit
-
-Using QUnit
-  http://docs.jquery.com/QUnit
-  The basics
-    qunit.js, qunit.css, html
-  Creating tests
-    Assertions
-      ok
-      equal
-      notEqual
-      deepEqual
-      notDeepEqual
-      strictEqual
-      notStrictEqual
-      raises
-    expect
-  Creating modules
-  Asynchronous testing
-    start
-    stop
-  DOM testing
-    #qunit-fixture
-
-Automation
-
-Extensions
-  jQuery Mockjax
-  Funcunit
-
-jQuery's Unit Tests
--->
-
-
-
 
 </body>
 </html>
