@@ -194,6 +194,12 @@ var myLocalVar = "This is really a global var";
   // Why? Because, in JavaScript, functions return `undefined` unless you
   // explicitly return a value.
 
+
+  // Also, while we're talking about jQuery methods, NEVER use undocumented
+  // jQuery methods in your plugin. Why? because they always seem to get
+  // changed when you're least able to update your code, which makes your
+  // users all kinds of :'-( <= SEE? THIS EMOTICON IS CRYING
+
 }(jQuery));
 
 
@@ -231,7 +237,8 @@ var myLocalVar = "This is really a global var";
   $("p").html("hello world"); // Set innerHTML of every selected element.
   $("p").html(); // "hello world" (get innerHTML of first selected element).
 
-  // But what's the problem with this?
+  // But what's the problem with this? (besides the fact that I haven't saved
+  // a reference to the jQuery object in a variable, which we all know is bad)
   $("p").html($("p").html() + "!!!");
 
 
@@ -244,7 +251,8 @@ var myLocalVar = "This is really a global var";
 
   // This is the explicit way, using jQuery#each.
   $("p").each(function() {
-    $(this).html($(this).html() + "!!!");
+    var elem = $(this);
+    elem.html(elem.html() + "!!!");
   });
 
 
@@ -259,13 +267,24 @@ var myLocalVar = "This is really a global var";
 
 
   // This is much better. It works with 0, 1, or any number of elements.
+  // Of course, I should probably have just used the "preferred" way, but I
+  // wanted to make my point. Iterate with jQuery#each in your plugin.
   $.fn.yell = function() {
     return this.each(function() {
-      $(this).html($(this).html() + "!!!");
+      var elem = $(this);
+      elem.html(elem.html() + "!!!");
     });
   };
 
   $("p").yell(); // Works just like you (and your plugin's users) expect.
+
+
+  // Here's a general-purpose template. Modify as-necessary.
+  $.fn.myMethod = function() {
+    return this.each(function() {
+      // Your code goes here!
+    });
+  };
 
 }(jQuery));
 
@@ -325,7 +344,7 @@ var myLocalVar = "This is really a global var";
   $("ul").children().addClass("lis").end().addClass("uls");
 
 
-  // How do you create your own .end()-able method?
+  // So, how do you create your own .end()-able method?
 
   // If you're using a jQuery method internally, it's easy.
   $.fn.spans = function() {
@@ -336,7 +355,8 @@ var myLocalVar = "This is really a global var";
   $("div").spans().addClass("spans").end().addClass("divs");
 
 
-  // But what if things get a little more.. complicated?
+  // But what if things get a little more.. complicated? Note: Andrew Wirick
+  // came up with this plugin scenario. Thanks, Andrew!
   $.fn.cousins = function() {
     return this.parent().siblings().children();
   };
@@ -521,7 +541,7 @@ var myLocalVar = "This is really a global var";
   $("p:first").data("foo", 123);
   $("p:hasdata").length; // 1
   $("p:hasdata(foo)").length; // 1
-  $("p:hasdata(bar)").length; // 1
+  $("p:hasdata(bar)").length; // 0
 
 }(jQuery));
 
@@ -556,7 +576,7 @@ var myLocalVar = "This is really a global var";
     // Set arguments to default values if necessary.
     if (color == null) { color = "red"; }
     if (width == null) { width = 100; }
-    // Ugh. Now we can actually do stuff.
+    // Now we can finally actually do stuff.
     return this.css("color", color).width(width);
   };
 
