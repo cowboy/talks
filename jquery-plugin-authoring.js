@@ -47,7 +47,7 @@ var cowboy = {
 // FWIW
 cowboy.plugins.length // 50
 
-
+// Feel free to "tag along": http://bit.ly/jq-plugin-authoring-talk
 
 
 
@@ -58,16 +58,21 @@ cowboy.plugins.length // 50
 
 // Note to self: talk about this for 30 seconds. Try not to ramble.
 
+// This is not a jQuery plugin. Sure, it uses jQuery.. but it doesn't feel
+// jQuery-like.
+function setHref(elems, href) {
+  elems.prop("href", href);
+};
+
+setHref($("a"), "/super-lame"); // UM, AWKWARD?!
 
 
+// Now this, on the other hand...
+jQuery.fn.href = function(href) {
+  return this.prop("href", href);
+};
 
-
-
-
-
-
-
-
+$("a").href("/super-awesome"); // OMG AWESOME!!1
 
 
 
@@ -119,21 +124,26 @@ function(a) { console.log("broken " + a); }(3); // SyntaxError
 
 // What are the alternatives to using an IIFE?
 
-// If your user had to use $.noConflict() to get jQuery to work with
-// Prototype, congratulations. You've just created a Prototype plugin.
+// You can just use `jQuery` everywhere, instead of `$`.
+jQuery.fn.myplugin = function(arg) {
+  if (jQuery.isFunction(arg)) {
+    // Do something.
+  } else if (jQuery.isArray(arg)) {
+    // Do something else.
+  }
+};
+
+// Why not just use `$`? Because if your user had to use $.noConflict() to
+// get jQuery to work with MooTools, congratulations. You've just created a
+// MooTools plugin.
 $.fn.myplugin = function() {
-  // Your code goes here.
+  // MooTools probably doesn't have $.fn anyways.
 };
 
 // Also...
 var myLocalVar = "This is really a global var";
 
-// Of course, you can just use `jQuery` everywhere, just don't miss a spot!
-jQuery.fn.myplugin = function() {
-  $.whoops() // I missed a `$`, let the tickets roll in!
-};
-
-// I've written a whole article about IIFEs. Read it!
+// I've written a whole article about IIFEs. Read it.
 // http://bit.ly/js-iife
 
 
@@ -295,8 +305,8 @@ jQuery.fn.myplugin = function() {
   };
 
   // FWIW, I *strongly recommend* against using the == operator, because it
-  // does type coercion. Except when comparing null == undefined. Article
-  // forthcoming.
+  // does type coercion. Except when comparing null == undefined. Then, it's
+  // ok. There are articles on this. I'll probably write one too, soon.
 
 }(jQuery));
 
@@ -392,6 +402,73 @@ jQuery.fn.myplugin = function() {
 
 
 // ===========================================================================
+// Namespacing Your Plugin
+// ===========================================================================
+
+(function($) {
+
+  // For "static" jQuery methods, this works wonderfully:
+
+  $.myPlugin = function() {
+    // Your code goes here.
+  };
+
+  $.myPlugin.submethod = function() {
+    // Your code goes here.
+  };
+
+  $.myPlugin(); // This will work.
+  $.myPlugin.submethod(); // So will this.
+
+
+  // For jQuery "collection" methods, this DOES NOT WORK WONDERFULLY:
+
+  $.fn.myPlugin = function() {
+    // Your code goes here.
+  };
+
+  $.fn.myPlugin.submethod = function() {
+    // Your code goes here.
+  };
+
+  $("li").myPlugin(); // Works great.
+  $("li").myPlugin.submethod(); // Not so great.
+
+  // Why does it fail? Think about it. What's `this` inside submethod?
+
+
+  // You can write a lot of code (believe me, I've tried) to make this kind of
+  // thing work, but while it's technically possible, it's confusing. Just try
+  // to keep track of chaining and .end(). Good times.
+  $("li").myPlugin().submethod();
+
+
+  // For basic jQuery "collection" methods, this is usually sufficient.
+  $.fn.myPlugin = function() {
+    // Your code goes here.
+  };
+
+  $.fn.myPluginSubmethod = function() {
+    // Your code goes here.
+  };
+
+  $("li").myPlugin(); // Works great.
+  $("li").myPluginSubmethod(); // Also works great.
+
+
+  // You can, of course, just use the jQuery UI Widget Factory to make a
+  // stateful plugin with submethods, events and more. Read more here:
+  // http://ajpiano.com/widgetfactory/
+  $("li").myPlugin("submethod", options);
+
+}(jQuery));
+
+
+
+
+
+
+// ===========================================================================
 // Custom Selectors
 // ===========================================================================
 
@@ -454,126 +531,6 @@ jQuery.fn.myplugin = function() {
 
 
 // ===========================================================================
-// Namespacing Your Plugin
-// ===========================================================================
-
-(function($) {
-
-  // For "static" jQuery methods, this works wonderfully:
-
-  $.myPlugin = function() {
-    // Your code goes here.
-  };
-
-  $.myPlugin.submethod = function() {
-    // Your code goes here.
-  };
-
-  $.myPlugin(); // This will work.
-  $.myPlugin.submethod(); // So will this.
-
-
-  // For jQuery "collection" methods, this DOES NOT WORK WONDERFULLY:
-
-  $.fn.myPlugin = function() {
-    // Your code goes here.
-  };
-
-  $.fn.myPlugin.submethod = function() {
-    // Your code goes here.
-  };
-
-  $("li").myPlugin(); // Works great.
-  $("li").myPlugin.submethod(); // Not so great.
-
-  // Why does it fail? Think about it. What's `this` inside submethod?
-
-
-  // You can write a lot of code (believe me, I've tried) to make this kind of
-  // thing work, but while it's technically possible, it's confusing. Just try
-  // to keep track of chaining and .end(). Good times.
-  $("li").myPlugin().submethod();
-
-
-  // For basic jQuery "collection" methods, this is usually sufficient.
-  $.fn.myPlugin = function() {
-    // Your code goes here.
-  };
-
-  $.fn.myPluginSubmethod = function() {
-    // Your code goes here.
-  };
-
-  $("li").myPlugin(); // Works great.
-  $("li").myPluginSubmethod(); // Also works great.
-
-
-  // You can, of course, just use the jQuery UI Widget Factory to make a
-  // stateful plugin with submethods, events and more.
-  $("li").myPlugin("submethod", options);
-
-}(jQuery));
-
-// ===========================================================================
-// What Shouldn't be a jQuery Plugin
-// ===========================================================================
-
-// Why shouldn't this be a jQuery plugin? Because this code has nothing to do
-// with jQuery. It's just JavaScript. Don't attach arbitrary methods to jQuery
-// unless they're REALLY jQuery plugins.
-(function($) {
-  var date;
-
-  $.timer = {
-    start: function() {
-      date = new Date;
-    },
-    elapsed: function() {
-      return new Date - date;
-    }
-  };
-}(jQuery));
-
-$.timer.start();
-$.timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed)
-
-
-// Use the CommonJS spec to create timer.js, and you've got a global timer
-// object with two functions.
-(function(exports) {
-  var date;
-
-  exports.timer = {
-    start: function() {
-      date = new Date;
-    },
-    elapsed: function() {
-      return new Date - date;
-    }
-  };
-}(this.exports || this));
-
-timer.start();
-timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed).
-
-
-// Don't like globals? Me neither. Just do something like this before
-// including the timer.js module:
-
-this.exports = Bocoup.utils;
-// << Include timer.js here! >>
-Bocoup.utils.timer.start();
-Bocoup.utils.timer.elapsed(); // 1000 (etc)
-
-// And no new globals have been introduced.
-window.timer // undefined
-
-
-
-
-
-
-// ===========================================================================
 // Extending Default Options
 // ===========================================================================
 
@@ -603,6 +560,7 @@ window.timer // undefined
     return this.css("color", color).width(width);
   };
 
+
   // And what about accepting a string width value like "1em"? How do you
   // know if a string or a width was passed? You don't.
 
@@ -620,7 +578,7 @@ window.timer // undefined
   };
 
 
-  // You might want to expose the defaults so they can be changed:
+  // You can also expose the defaults so they can be changed by the user:
 
   $.fn.colorizeAndOrSetWidth = function(options) {
     // Copy defaults and then the passed options into an empty object, then
@@ -640,11 +598,88 @@ window.timer // undefined
 
 
 // ===========================================================================
-// Stateful Plugins with jQuery UI
+// What Shouldn't be a jQuery Plugin
 // ===========================================================================
+
+// Why shouldn't this be a jQuery plugin? Because this code has nothing to do
+// with jQuery. It's just JavaScript. Don't attach arbitrary methods to jQuery
+// unless they're REALLY jQuery plugins.
+(function($) {
+  var date;
+
+  $.timer = {
+    start: function() {
+      date = new Date;
+    },
+    elapsed: function() {
+      return new Date - date;
+    }
+  };
+}(jQuery));
+
+$.timer.start();
+$.timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed)
+
+
+// Use this structure when creating timer.js, and you'll get a global timer
+// object with two functions.
+(function(exports) {
+  var date;
+
+  exports.timer = {
+    start: function() {
+      date = new Date;
+    },
+    elapsed: function() {
+      return new Date - date;
+    }
+  };
+}(typeof exports === "object" && exports || this));
+
+timer.start();
+timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed).
+
+
+// Don't like globals? Me neither. Just do something like this before
+// including the timer.js module:
+
+this.exports = Bocoup.utils;
+// << Include timer.js here! >>
+Bocoup.utils.timer.start();
+Bocoup.utils.timer.elapsed(); // 1000 (etc)
+
+// And no new globals have been introduced.
+window.timer // undefined
+
+
+// Or just use a script loader! This non-jQuery-specific timer.js will work
+// in Node.js, RequireJS and curl.js (there's a config option in 0.6 for it).
+
+// Per John Hann (aka @unscriptable), "As long as the AMD loader can auto-wrap
+// CJS modules in a define(), it's all good."
+
+
+
+
 
 // ===========================================================================
 // jQuery Plugins Index package.json
 // ===========================================================================
+
+// Still under development, actually. Check this out for the latest info:
+// http://bit.ly/jq-plugins-package-json
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
