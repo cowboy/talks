@@ -379,7 +379,7 @@ var myLocalVar = "This is really a global var";
   };
 
   // Much better.
-  $("li:eq(0)").cousins().addClass("cousins").end().addClass("divs");
+  $("li:eq(0)").cousins().addClass("cousins").end().addClass("lis");
 
 
   // jQuery#pushStack supports a few more options. Check out the API docs
