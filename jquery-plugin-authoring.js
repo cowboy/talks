@@ -407,13 +407,19 @@ var myLocalVar = "This is really a global var";
     });
   };
 
+  $("p").contents().textnodes(); // Works!
+
+
   // Traverse from the current set of elements.
-  $.fn.firstChild = function() {
+  $.fn.firstChildren = function() {
     return this.map(function() {
       // Add some DOM element or array of DOM elements to the result set.
       return this.firstChild;
     });
   };
+  
+  $("ul").firstChildren(); // Works like $("li:first-child").
+
 
   // For this method, jQuery#pushStack would have been a better choice.
   $.fn.cousins = function() {
