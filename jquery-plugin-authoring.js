@@ -364,7 +364,7 @@ var myLocalVar = "This is really a global var";
 
 
   // But what if things get a little more.. complicated? Note: Andrew Wirick
-  // came up with this plugin scenario. Thanks, Andrew!
+  // (aka @amwirick) came up with this plugin scenario. Thanks, Andrew!
   $.fn.cousins = function() {
     return this.parent().siblings().children();
   };
