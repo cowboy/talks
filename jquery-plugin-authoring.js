@@ -242,23 +242,23 @@ var myLocalVar = "This is really a global var";
 (function($) {
 
   // We all know this, right?
-  $("p").html("hello world"); // Set innerHTML of every selected element.
-  $("p").html(); // "hello world" (get innerHTML of first selected element).
+  $("li").html("hello world"); // Set innerHTML of every selected element.
+  $("li").html(); // "hello world" (get innerHTML of first selected element).
 
   // But what's the problem with this? (besides the fact that I haven't saved
   // a reference to the jQuery object in a variable, which we all know is bad)
-  $("p").html($("p").html() + "!!!");
+  $("li").html($("li").html() + "!!!");
 
 
   // We can solve this problem in a few ways:
 
   // This is the preferred way (since jQuery 1.4).
-  $("p").html(function(index, currentHtml) {
+  $("li").html(function(index, currentHtml) {
     return currentHtml + "!!!";
   });
 
   // This is the explicit way, using jQuery#each.
-  $("p").each(function() {
+  $("li").each(function() {
     var elem = $(this);
     elem.html(elem.html() + "!!!");
   });
@@ -271,7 +271,7 @@ var myLocalVar = "This is really a global var";
     return this.html(this.html() + "!!!");
   };
 
-  $("p").yell(); // ...2 or more P elements? Whoops.
+  $("li").yell(); // ...2 or more P elements? Whoops.
 
 
   // This is much better. It works with 0, 1, or any number of elements.
@@ -284,7 +284,7 @@ var myLocalVar = "This is really a global var";
     });
   };
 
-  $("p").yell(); // Works just like you (and your plugin's users) expect.
+  $("li").yell(); // Works just like you (and your plugin's users) expect.
 
 
   // Here's a general-purpose template. Modify as-necessary.
@@ -319,21 +319,18 @@ var myLocalVar = "This is really a global var";
 
   // What if our core logic couldn't just use a built-in jQuery method?
   $.fn.href = function(href) {
-    if (href == null) {
-      // Return the current href property of the first selected element.
-      return this.get(0).href;
-    } else {
-      // Set the current href property of all selected elements and
-      // return the jQuery object, allowing chaining.
+    if (arguments.length > 0) {
+      // Arguments were passed (setter). Set the current href property of all
+      // selected elements and return the jQuery object, allowing chaining.
       return this.each(function() {
         this.href = href;
       });
+    } else {
+      // No arguments were passed (getter). Return the current href property
+      // of the first selected element.
+      return this.get(0).href;
     }
   };
-
-  // FWIW, I *strongly recommend* against using the == operator, because it
-  // does type coercion. Except when comparing null == undefined. Then, it's
-  // ok. There are articles on this. I'll probably write one too, soon.
 
 }(jQuery));
 
@@ -401,13 +398,13 @@ var myLocalVar = "This is really a global var";
 (function($) {
 
   // Filter the current set of nodes down to just text nodes.
-  $.fn.textnodes = function() {
+  $.fn.textNodes = function() {
     return this.filter(function() {
       return this.nodeType === 3;
     });
   };
 
-  $("p").contents().textnodes(); // Works!
+  $("li").contents().textNodes(); // Works!
 
 
   // Traverse from the current set of elements.
@@ -417,8 +414,8 @@ var myLocalVar = "This is really a global var";
       return this.firstChild;
     });
   };
-  
-  $("ul").firstChildren(); // Works like $("li:first-child").
+
+  $("ul").firstChildren(); // Note: Might return textNodes.
 
 
   // For this method, jQuery#pushStack would have been a better choice.
@@ -537,17 +534,16 @@ var myLocalVar = "This is really a global var";
 
   // You can also pass arguments to selectors.
   $.expr[":"].hasdata = function(elem, i, match) {
-    // Element data.
-    var data = $(elem).data();
-    var prop;
+    // Has data been stored on the element?
+    var hasData = $.hasData(elem);
     if (match[3] == null) {
-      // Return true if data object has any properties...
-      for (prop in data) { return true; }
-      // ...otherwise return false.
-      return false;
+      // If no argument was passed to :hasdata, just return true or false
+      // based on whether or not data has been stored on the element.
+      return hasData;
     } else {
-      // Return true if argument is a property of the data object.
-      return match[3] in data;
+      // If an argument was passed to :hasdata(), return true if argument is
+      // a property of the data object.
+      return hasData && match[3] in $(elem).data();
     }
   };
 
@@ -556,6 +552,11 @@ var myLocalVar = "This is really a global var";
   $("p:hasdata").length; // 1
   $("p:hasdata(foo)").length; // 1
   $("p:hasdata(bar)").length; // 0
+
+
+  // FWIW, I *strongly recommend* against using the == operator, because it
+  // does type coercion. Except when comparing null == undefined. Then, it's
+  // ok. There are articles on this. I'll probably write one too, soon.
 
 }(jQuery));
 
