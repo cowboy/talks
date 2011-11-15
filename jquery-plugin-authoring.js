@@ -50,10 +50,6 @@ cowboy.plugins.length // 50
 // Feel free to "tag along": http://bit.ly/jq-plugin-authoring-talk
 
 
-// ALSO, BOCOUP IS DOING A CONFERENCE!
-// New Game Conference, Nov 1-2 in San Francisco
-// www.newgameconf.com
-// USE COUPON CODE ngc18 FOR 18% DISCOUNT!!
 
 
 
