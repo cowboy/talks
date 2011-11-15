@@ -14,7 +14,7 @@ var cowboy = {
               "    |  _  ||  _  ||  ___||  _  ||  |  ||  _  |    ",
               "    |_____||_____||_____||_____||_____||   __|    ",
               "                                       |__|       "].join("\n"),
-    title:   "Director of Training and Pluginization",
+    title:   "Director of Pluginization",
     url:     "http://bocoup.com/",
     twitter: "@bocoup"
   },
@@ -48,8 +48,6 @@ var cowboy = {
 cowboy.plugins.length // 50
 
 // Feel free to "tag along": http://bit.ly/jq-plugin-authoring-talk
-
-
 
 
 
