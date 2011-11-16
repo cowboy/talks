@@ -34,7 +34,7 @@
     $.getJSON("/user/123", function(data) {
       ok(data, "data is returned from the server");
       equal(data.status, "1", "user found, status should be 1");
-      equal(data.user, "sample user 123", "user found, status should be 1");
+      equal(data.user, "sample user 123", "user found, id should be 123");
       start();
     });
   });
