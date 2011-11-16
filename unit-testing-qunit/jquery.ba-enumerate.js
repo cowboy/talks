@@ -9,11 +9,13 @@
 
 (function($){
 
-  $.fn.enumerate = function( start ) {
-    start = start || 0;
+  $.fn.enumerate = function(start) {
+    if (typeof start !== "number") {
+      start = 1;
+    }
     return this.each(function(i){
-      $(this).prepend( ( i + start ) + '. ' );
+      $(this).prepend((start + i) + ". ");
     });
   };
 
-})(jQuery);
+}(jQuery));

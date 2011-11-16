@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Leaky Tests</title>
   <link rel="stylesheet" href="qunit.css" type="text/css">
   <script src="qunit.js"></script>
   <script src="jquery.js"></script>
   <script type="text/javascript">
 
-  test( "not leaky", 1, function() {
+  test("not leaky", 1, function() {
     var x = true;
-    ok( x, "passes because x is true" );
+    ok(x, "passes because x is true");
   });
 
-  test( "leaky", 1, function() {
+  test("leaky", 1, function() {
     x = true;
-    ok( x, "also passes because x is true" );
+    ok(x, "also passes because x is true");
   });
 
   </script>

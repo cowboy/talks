@@ -1,136 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Async Tests</title>
   <link rel="stylesheet" href="qunit.css" type="text/css">
   <script src="qunit.js"></script>
   <script src="jquery.js"></script>
   <script type="text/javascript">
 
-  test( "no errors", function() {
+  test("no errors", function() {
+    var actual = false;
+
+    setTimeout(function() {
+      ok(actual, "this test would fail.. if it ever ran");
+    }, 1000);
+  });
+
+  test("expectations", function() {
+    expect(1);
 
     var actual = false;
 
-    setTimeout( function(){
-
-      ok( actual, "this test would fail.. if it ever ran" );
-
-    }, 1000 );
+    setTimeout(function() {
+      ok(actual, "this test would fail.. if it ever ran");
+    }, 1000);
   });
 
-  test( "expectations", function() {
-
-    expect( 1 );
-
-    var actual = false;
-
-    setTimeout( function(){
-
-      ok( actual, "this test would fail.. if it ever ran" );
-
-    }, 1000 );
-  });
-
-  test( "stop & start", function() {
-
-    expect( 1 );
+  test("stop & start", function() {
+    expect(1);
 
     var actual = false;
 
     stop();
-    setTimeout( function(){
-
-      ok( actual, "this test actually runs, and fails" );
+    setTimeout(function() {
+      ok(actual, "this test actually runs, and fails");
       start();
-
-    }, 1000 );
+    }, 1000);
   });
 
-  asyncTest( "asyncTest & start", function() {
-
-    expect( 1 );
+  asyncTest("asyncTest & start", function() {
+    expect(1);
 
     var actual = false;
 
-    setTimeout( function(){
-
-      ok( actual, "this test actually runs, and fails" );
+    setTimeout(function() {
+      ok(actual, "this test actually runs, and fails");
       start();
-
-    }, 1000 );
+    }, 1000);
   });
 
-  test( "stop w/ timeout", function() {
-
-    expect( 1 );
-
-    stop( 1000 );
-    $.getJSON( "http://oops.com?callback=?", function( data ){
-
-      ok( actual, "this test would fail.. if it ever ran" );
-      start();
-
-    });
-  });
-
-  asyncTest( "multiple async w/ setTimeout", function() {
-    expect( 4 );
-
-    var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
-
-    $.getJSON( url, { a: 1 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.a, "1", "the value of data.a should be 1" );
-    });
-
-    $.getJSON( url, { b: 2 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.b, "2", "the value of data.b should be 2" );
-    });
-
-    setTimeout( start, 2000 );
-  });
-
-  test( "multiple async w/ counter", function() {
-    expect( 4 );
-
-    stop();
-
-    // Only call start() when counter is 0.
-    var counter = 2;
-    function done() { --counter || start(); }
-
-    var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
-
-    $.getJSON( url, { a: 1 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.a, "1", "the value of data.a should be 1" );
-      done();
-    });
-
-    $.getJSON( url, { b: 2 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.b, "2", "the value of data.b should be 2" );
-      done();
-    });
-  });
-
-  test( "multiple async w/ multiple stops", function() {
-    expect( 4 );
+  test("stops & starts", function() {
+    expect(4);
 
     var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
 
     stop();
-    $.getJSON( url, { a: 1 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.a, "1", "the value of data.a should be 1" );
+    $.getJSON(url, {a: 1}, function(data) {
+      ok(data, "data is returned from the server");
+      equal(data.a, "1", "the value of data.a should be 1");
       start();
     });
 
     stop();
-    $.getJSON( url, { b: 2 }, function( data ) {
-      ok( data, "data is returned from the server" );
-      equal( data.b, "2", "the value of data.b should be 2" );
+    $.getJSON(url, {b: 2}, function(data) {
+      ok(data, "data is returned from the server");
+      equal(data.b, "2", "the value of data.b should be 2");
       start();
     });
   });

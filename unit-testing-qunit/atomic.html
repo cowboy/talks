@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Not-Atomic Tests = Bad</title>
   <link rel="stylesheet" href="qunit.css" type="text/css">
   <script src="qunit.js"></script>
@@ -11,20 +12,20 @@
 
   var counter = 0;
 
-  test( "first test", 1, function(){
+  test("first test", 1, function() {
     counter++;
-    equal( counter, 1, "counter should be 1" );
+    equal(counter, 1, "counter should be 1");
   });
 
-  test( "second test", 1, function(){
+  test("second test", 1, function() {
     counter++;
-    equal( counter, 2, "counter should be 2" );
+    equal(counter, 2, "counter should be 2");
   });
 
-  test( "third test", 2, function(){
+  test("third test", 2, function() {
     counter++;
-    equal( counter, 2, "counter should be 2" );
-    ok( false, "oops, an error" );
+    equal(counter, 2, "counter should be 2");
+    ok(false, "oops, an error");
   });
 
   </script>

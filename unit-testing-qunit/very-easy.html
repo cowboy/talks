@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>How easy? Very easy.</title>
   <link rel="stylesheet" href="qunit.css" type="text/css">
   <script src="qunit.js"></script>
   <script type="text/javascript">
 
-  test( "some tests", function() {
+  test("some tests", function() {
+    expect(3);
 
-    expect( 3 );
-
-    ok( true, "passes because true is true" );
-    equal( "1", 1, "passes because '1' == 1" );
-    strictEqual( "1", 1, "fails because '1' !== 1" );
-
+    ok(true, "passes because true is true");
+    equal("1", 1, "passes because '1' == 1");
+    strictEqual("1", 1, "fails because '1' !== 1");
   });
 
   </script>

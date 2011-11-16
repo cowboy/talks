@@ -48,14 +48,12 @@
   <h1>How easy?</h1>
   <p class="subhead">Very easy.</p>
   <pre class="brush:js class-name:">
-    test( "some tests", function() {
+    test("some tests", function() {
+      expect(3);
 
-      expect( 3 );
-
-      ok( true, "passes because true is true" );
-      equal( "1", 1, "passes because '1' == 1" );
-      strictEqual( "1", 1, "fails because '1' !== 1" );
-
+      ok(true, "passes because true is true");
+      equal("1", 1, "passes because '1' == 1");
+      strictEqual("1", 1, "fails because '1' !== 1");
     });
   </pre>
   <aside>
@@ -65,10 +63,10 @@
 
 <section>
   <h1>Used and Maintained<br>by the jQuery Project</h1>
-  <p>3823 tests, and counting.</p>
+  <p>5700+ tests.</p>
   <aside>
     <a href="https://github.com/jquery/jquery/tree/master/test/unit">jQuery Unit Tests on GitHub</a>
-    <a href="http://swarm.jquery.org/git/jquery/test/">Run bleeding-edge jQuery Unit Tests</a>
+    <a href="http://benalman.com/code/projects/fork/jquery-1.7/test/">Run jQuery 1.7 tests</a>
   </aside>
 </section>
 
@@ -81,7 +79,7 @@
   <ul>
     <li>Your code is more complex than you think.</li>
     <li>Different browsers behave differently.</li>
-    <li>Caffiene &amp; intuition only carry you so fa.</li>
+    <li>Caffiene &amp; intuition only carry you so far.</li>
   </ul>
 </section>
 
@@ -106,7 +104,7 @@
 <section>
   <h1>It's Cool</h1>
   <ol>
-    <li>Devs know that you test your code.</li>
+    <li>Devs know that you're responsible.</li>
     <li>They use your code with confidence.</li>
     <li>Pat self on back.</li>
   </ol>
@@ -117,29 +115,21 @@
 </section>
 
 <section>
-  <h1>Write Testable Code!</h1>
-  <p>Separate your code into small,<br>individually testable parts.</p>
-</section>
-
-<section>
-  <h1>What's the Next Step?</h1>
-</section>
-
-<section>
   <h1>Download QUnit</h1>
   <aside>
-    <a href="https://github.com/jquery/qunit">QUnit on GitHub</a>
     <a href="http://docs.jquery.com/QUnit">QUnit Documentation</a>
+    <a href="https://github.com/jquery/qunit">QUnit on GitHub</a>
   </aside>
 </section>
 
 <section>
   <h1>Three Files</h1>
-  <p class="subhead">Just qunit.js, qunit.css, and a little bit of HTML.</p>
+  <p class="subhead">Just qunit.js, qunit.css, and a little bit of HTML:</p>
   <pre class="brush:html class-name:l20">
     &lt;!DOCTYPE html&gt;
     &lt;html&gt;
     &lt;head&gt;
+      &lt;meta charset="UTF-8" /&gt;
       &lt;title&gt;MyApp Test Suite&lt;/title&gt;
       &lt;link rel=&quot;stylesheet&quot; href=&quot;qunit.css&quot; type=&quot;text/css&quot;&gt;
       &lt;script src=&quot;qunit.js&quot;&gt;&lt;/script&gt;
@@ -157,9 +147,9 @@
     &lt;/html&gt;
   </pre>
   <aside>
-    <a href="https://github.com/jquery/qunit/raw/master/qunit/qunit.js">qunit.js</a>
-    <a href="https://github.com/jquery/qunit/raw/master/qunit/qunit.css">qunit.css</a>
-    <a href="https://github.com/jquery/qunit/raw/master/test/index.html">sample HTML</a>
+    <a href="https://raw.github.com/jquery/qunit/1.1.0/qunit/qunit.js">qunit.js</a>
+    <a href="https://raw.github.com/jquery/qunit/1.1.0/qunit/qunit.css">qunit.css</a>
+    <a href="https://raw.github.com/jquery/qunit/1.1.0/test/index.html">sample HTML</a>
   </aside>
 </section>
 
@@ -167,7 +157,7 @@
   <h1>Create a Test</h1>
   <p class="subhead">It's really this simple.</p>
   <pre class="brush:js">
-    test( "The name of the test", function() {
+    test("The name of the test", function() {
       // Assertions.
     });
   </pre>
@@ -175,24 +165,24 @@
 
 <section>
   <h1>What are Assertions?</h1>
-  <p>You say &ldquo;this is how it should work,&rdquo; and<br>QUnit tells you if it does (or doesn't).</p>
+  <p>You say &ldquo;this is how it should work,&rdquo;<br>and QUnit tells you when it doesn't.</p>
 </section>
 
 <section>
   <h1>First, Set Expectations</h1>
-  <p class="subhead">This is most useful when testing async code, but get in the habit anyways.</p>
-  <pre class="brush:js class-name:l20">
+  <p class="subhead">Get in the habit of doing this!</p>
+  <pre class="brush:js class-name:l20 highlight:[4,11]">
     // You can either set an expectation (number) like this.
 
-    test( "test name", function() {
-      expect( 3 );
+    test("test name", function() {
+      expect(3);
 
       // QUnit expects 3 assertions in this test.
     });
 
     // Or like this.
 
-    test( "test name", 3, function() {
+    test("test name", 3, function() {
       // QUnit expects 3 assertions in this test.
     });
 
@@ -220,16 +210,14 @@
   <h1><code>ok</code></h1>
   <p class="subhead">A boolean assertion that passes if the first argument is truthy.</p>
   <pre class="brush:js">
-    test( "ok", 3, function() {
-
-      ok( true,  "passes because true is true" );
-      ok( 1,     "passes because 1 is truthy" );
-      ok( "",    "fails because empty string is not truthy" );
-
+    test("ok", 3, function() {
+      ok(true,  "passes because true is true");
+      ok(1,     "passes because 1 is truthy");
+      ok("",    "fails because empty string is not truthy");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?ok">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=ok">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -237,18 +225,16 @@
   <h1><code>equal</code></h1>
   <p class="subhead">A comparison assertion that passes if actual == expected.</p>
   <pre class="brush:js">
-    test( "equal", 3, function() {
+    test("equal", 3, function() {
+      var actual = 5 - 4;
 
-      var actual = 1;
-
-      equal( actual, 1,     "passes because 1 == 1" );
-      equal( actual, true,  "passes because 1 == true" );
-      equal( actual, false, "fails because 1 != false" );
-
+      equal(actual, 1,     "passes because 1 == 1");
+      equal(actual, true,  "passes because 1 == true");
+      equal(actual, false, "fails because 1 != false");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?equal">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=equal">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -256,18 +242,16 @@
   <h1><code>notEqual</code></h1>
   <p class="subhead">A comparison assertion that passes if actual != expected.</p>
   <pre class="brush:js">
-    test( "notEqual", 3, function() {
+    test("notEqual", 3, function() {
+      var actual = 5 - 4;
 
-      var actual = 1;
-
-      notEqual( actual, 0,     "passes because 1 != 0" );
-      notEqual( actual, false, "passes because 1 != false" );
-      notEqual( actual, true,  "fails because 1 == true" );
-
+      notEqual(actual, 0,     "passes because 1 != 0");
+      notEqual(actual, false, "passes because 1 != false");
+      notEqual(actual, true,  "fails because 1 == true");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?notEqual">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=notEqual">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -275,18 +259,16 @@
   <h1><code>strictEqual</code></h1>
   <p class="subhead">A comparison assertion that passes if actual === expected.</p>
   <pre class="brush:js">
-    test( "strictEqual", 3, function() {
+    test("strictEqual", 3, function() {
+      var actual = 5 - 4;
 
-      var actual = 1;
-
-      strictEqual( actual, 1,     "passes because 1 === 1" );
-      strictEqual( actual, true,  "fails because 1 !== true" );
-      strictEqual( actual, false, "fails because 1 !== false" );
-
+      strictEqual(actual, 1,     "passes because 1 === 1");
+      strictEqual(actual, true,  "fails because 1 !== true");
+      strictEqual(actual, false, "fails because 1 !== false");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?strictEqual">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=strictEqual">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -294,18 +276,16 @@
   <h1><code>notStrictEqual</code></h1>
   <p class="subhead">A comparison assertion that passes if actual !== expected.</p>
   <pre class="brush:js">
-    test( "notStrictEqual", 3, function() {
+    test("notStrictEqual", 3, function() {
+      var actual = 5 - 4;
 
-      var actual = 1;
-
-      notStrictEqual( actual, 1,     "fails because 1 === 1" );
-      notStrictEqual( actual, true,  "passes because 1 !== true" );
-      notStrictEqual( actual, false, "passes because 1 !== false" );
-
+      notStrictEqual(actual, 1,     "fails because 1 === 1");
+      notStrictEqual(actual, true,  "passes because 1 !== true");
+      notStrictEqual(actual, false, "passes because 1 !== false");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?notStrictEqual">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=notStrictEqual">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -313,26 +293,24 @@
   <h1><code>deepEqual</code></h1>
   <p class="subhead">Recursive comparison assertion, working on primitives, arrays and objects, using ===.</p>
   <pre class="brush:js class-name:l20">
-    test( "deepEqual", 7, function() {
+    test("deepEqual", 7, function() {
+      var actual = {a: 1};
 
-      var actual = { a: 1 };
+      equal(    actual, {a: 1},   "fails because objects are different");
+      deepEqual(actual, {a: 1},   "passes because objects are equivalent");
+      deepEqual(actual, {a: "1"}, "fails because '1' !== 1");
 
-      equal(     actual, { a: 1 },   "fails because objects are different" );
-      deepEqual( actual, { a: 1 },   "passes because objects are equivalent" );
-      deepEqual( actual, { a: "1" }, "fails because '1' !== 1" );
+      var a = $("body > *");
+      var b = $("body").children();
 
-      var a = $('body > *'),
-          b = $('body').children();
-
-      equal(     a,       b,       "fails because jQuery objects are different" );
-      deepEqual( a,       b,       "fails because jQuery objects are not equivalent" );
-      equal(     a.get(), b.get(), "fails because element arrays are different" );
-      deepEqual( a.get(), b.get(), "passes because element arrays are equivalent" );
-
+      equal(    a,       b,       "fails because jQuery objects are different");
+      deepEqual(a,       b,       "fails because jQuery objects are not equivalent");
+      equal(    a.get(), b.get(), "fails because element arrays are different");
+      deepEqual(a.get(), b.get(), "passes because element arrays are equivalent");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?deepEqual">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=deepEqual">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -340,18 +318,16 @@
   <h1><code>notDeepEqual</code></h1>
   <p class="subhead">Recursive comparison assertion. The result of deepEqual, inverted.</p>
   <pre class="brush:js">
-    test( "notDeepEqual", 3, function() {
+    test("notDeepEqual", 3, function() {
+      var actual = {a: 1};
 
-      var actual = { a: 1 };
-
-      notEqual(     actual, { a: 1 },   "passes because objects are different" );
-      notDeepEqual( actual, { a: 1 },   "fails because objects are equivalent" );
-      notDeepEqual( actual, { a: "1" }, "passes because '1' !== 1" );
-
+      notEqual(    actual, {a: 1},   "passes because objects are different");
+      notDeepEqual(actual, {a: 1},   "fails because objects are equivalent");
+      notDeepEqual(actual, {a: "1"}, "passes because '1' !== 1");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?notDeepEqual">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=notDeepEqual">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -359,49 +335,47 @@
   <h1><code>raises</code></h1>
   <p class="subhead">Assertion to test if a callback throws an exception when run.</p>
   <pre class="brush:js class-name:l20">
-    test( "raises", 3, function() {
+    test("raises", 3, function() {
+      raises(function() {
+        throw new Error("Look ma, I'm an error!");
+      }, "passes because an error is thrown inside the callback");
 
-      raises( function() {
-        throw new Error( "Look ma, I'm an error!" );
-      }, "passes because an error is thrown inside the callback" );
-
-      raises( function(){
+      raises(function() {
         x // ReferenceError: x is not defined
-      }, "passes because an error is thrown inside the callback" );
+      }, "passes because an error is thrown inside the callback");
 
-      raises( function(){
+      raises(function() {
         var a = 1;
-      }, "fails because no error is thrown inside the callback" );
-
+      }, "fails because no error is thrown inside the callback");
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/assertions.html?raises">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/assertions.html?filter=raises">Run this test in QUnit</a>
   </aside>
 </section>
 
 <section>
   <h1>Tests Should be Atomic</h1>
-  <p class="subhead">And execution order cannot be guaranteed!</p>
+  <p class="subhead">Execution order cannot be guaranteed!</p>
   <pre class="brush:js class-name:l20">
     // Don't do this.
 
     var counter = 0;
 
-    test( "first test", 1, function(){
+    test("first test", 1, function() {
       counter++;
-      equal( counter, 1, "counter should be 1" );
+      equal(counter, 1, "counter should be 1");
     });
 
-    test( "second test", 1, function(){
+    test("second test", 1, function() {
       counter++;
-      equal( counter, 2, "counter should be 2" );
+      equal(counter, 2, "counter should be 2");
     });
 
-    test( "third test", 2, function(){
+    test("third test", 2, function() {
       counter++;
-      equal( counter, 2, "counter should be 2" );
-      ok( false, "oops, an error" );
+      equal(counter, 2, "counter should be 2");
+      ok(false, "oops, an error");
     });
   </pre>
   <aside>
@@ -415,11 +389,12 @@
 
 <section>
   <h1>#qunit-fixture</h1>
-  <p class="subhead">Any markup in here will be reset after every test (uses jQuery if possible).</p>
-  <pre class="brush:html class-name:l20 highlight:[16,17,18,19,20,21,22]">
+  <p class="subhead">Any markup in here will be reset after every test (uses jQuery if available).</p>
+  <pre class="brush:html class-name:l20 highlight:[17,18,19,20,21,22,23]">
     &lt;!DOCTYPE html&gt;
     &lt;html&gt;
     &lt;head&gt;
+      &lt;meta charset="UTF-8" /&gt;
       &lt;title&gt;MyApp Test Suite&lt;/title&gt;
       &lt;link rel=&quot;stylesheet&quot; href=&quot;qunit.css&quot; type=&quot;text/css&quot;&gt;
       &lt;script src=&quot;qunit.js&quot;&gt;&lt;/script&gt;
@@ -445,41 +420,55 @@
 </section>
 
 <section>
-  <h1>A Plugin &ldquo;Test Suite&rdquo;</h1>
-  <p class="subhead">Sometimes it really is this simple.</p>
+  <h1>A Simple &ldquo;Test Suite&rdquo;</h1>
+  <p class="subhead">A little forethought can save <em>a lot</em> of frustration.</p>
   <pre class="brush:js class-name:l20">
-    test( "enumerate()", 4, function() {
+    module("jQuery#enumerate");
+
+    test("chainable", 1, function() {
       var items = $("#qunit-fixture li");
-
-      strictEqual( items.enumerate(), items, ".enumerate should return this" );
-
-      equal( items.eq(0).text(), "0. foo", "first item should have index 0" );
-      equal( items.eq(1).text(), "1. bar", "second item should have index 1" );
-      equal( items.eq(2).text(), "2. baz", "third item should have index 2" );
+      strictEqual(items.enumerate(), items, "should be chaninable");
     });
 
-    test( "enumerate( 1 )", 4, function() {
-      var items = $("#qunit-fixture li");
+    test("no args passed", 3, function() {
+      var items = $("#qunit-fixture li").enumerate();
+      equal(items.eq(0).text(), "1. foo", "first item should have index 1");
+      equal(items.eq(1).text(), "2. bar", "second item should have index 2");
+      equal(items.eq(2).text(), "3. baz", "third item should have index 3");
+    });
 
-      strictEqual( items.enumerate( 1 ), items, ".enumerate should return this" );
+    test("0 passed", 3, function() {
+      var items = $("#qunit-fixture li").enumerate(0);
+      equal(items.eq(0).text(), "0. foo", "first item should have index 0");
+      equal(items.eq(1).text(), "1. bar", "second item should have index 1");
+      equal(items.eq(2).text(), "2. baz", "third item should have index 2");
+    });
 
-      equal( items.eq(0).text(), "1. foo", "first item should have index 1" );
-      equal( items.eq(1).text(), "2. bar", "second item should have index 2" );
-      equal( items.eq(2).text(), "3. baz", "third item should have index 3" );
+    test("1 passed", 3, function() {
+      var items = $("#qunit-fixture li").enumerate(1);
+      equal(items.eq(0).text(), "1. foo", "first item should have index 1");
+      equal(items.eq(1).text(), "2. bar", "second item should have index 2");
+      equal(items.eq(2).text(), "3. baz", "third item should have index 3");
     });
   </pre>
   <aside>
+    <a href="unit-testing-qunit/jquery.ba-enumerate.js">See the plugin source</a>
     <a href="unit-testing-qunit/enumerate-test.html">Run these tests in QUnit</a>
   </aside>
 </section>
 
 <section>
+  <h1>Now, when I refactor...</h1>
+  <p>(Time for an example)</p>
+</section>
+
+<section>
   <h1>Plugin Authors</h1>
-  <p>If possible, test your plugin in<br>multiple versions of jQuery.</p>
+  <p>If it makes sense, test your plugin<br>in older versions of jQuery too.</p>
   <aside>
-    <a href="unit-testing-qunit/enumerate-test.html">Run tests in jQuery 1.4.4</a>
-    <a href="unit-testing-qunit/enumerate-test-132.html">Run tests in jQuery 1.3.2</a>
-    <a href="unit-testing-qunit/enumerate-test-126.html">Run tests in jQuery 1.2.6</a>
+    <a href="unit-testing-qunit/enumerate-test.html">Run tests in jQuery latest</a>
+    <a href="unit-testing-qunit/enumerate-test-16.html">Run tests in jQuery 1.6.x</a>
+    <a href="unit-testing-qunit/enumerate-test-15.html">Run tests in jQuery 1.5.x</a>
   </aside>
 </section>
 
@@ -490,25 +479,25 @@
 <section>
   <h1>Create Modules</h1>
   <p class="subhead">Because your unit tests should be organized too.</p>
-  <pre class="brush:js class-name:l20">
-    module( "core" );
+  <pre class="brush:js class-name:l20 highlight:[1,11]">
+    module("core");
 
-    test( "a test in the core module", function() {
-      ok( true, "this test had better pass" );
+    test("a test in the core module", function() {
+      ok(true, "this test had better pass");
     });
 
-    test( "another test in the core module", function() {
-      ok( true, "this test had also better pass" );
+    test("another test in the core module", function() {
+      ok(true, "this test had also better pass");
     });
 
-    module( "options" );
+    module("options");
 
-    test( "a test in the options module", function() {
-      ok( true, "this test really, really better pass" );
+    test("a test in the options module", function() {
+      ok(true, "this test really, really better pass");
     });
 
-    test( "another test in the options module", function() {
-      ok( false, "sadly, this test is going to fail" );
+    test("another test in the options module", function() {
+      ok(false, "sadly, this test is going to fail");
     });
   </pre>
   <aside>
@@ -519,45 +508,35 @@
 <section>
   <h1>More Powerful Modules</h1>
   <p class="subhead">Configure setup and teardown callbacks to streamline your tests.</p>
-  <pre class="brush:js class-name:l20">
+  <pre class="brush:js class-name:l20 highlight:[4,5,6,17,18,19,20,21,22,23]">
     // Defining a "setup" callback.
 
-    module( "module1", {
+    module("module1", {
       setup: function() {
-        ok( true, "once extra assert per test" );
+        ok(true, "once extra assert per test");
       }
     });
 
-    test( "test with setup", function() {
-      expect( 1 );
+    test("test with setup", function() {
+      expect(1);
     });
 
 
     // Defining both "setup" and "teardown" callbacks.
 
-    module( "module2", {
+    module("module2", {
       setup: function() {
-        ok( true, "once extra assert per test" );
+        ok(true, "once extra assert per test");
         this.prop = "foo";
       },
       teardown: function() {
-        ok( true, "and one extra assert after each test" );
+        ok(true, "and one extra assert after each test");
       }
     });
 
-    test( "test with setup and teardown", function() {
-      expect( 3 );
-      same( this.prop, "foo", "this.prop === 'foo' in all tests" );
-    });
-
-
-    // Since callbacks aren't defined, expectations aren't incremented.
-
-    module( "module3" );
-
-    test( "test with neither setup nor teardown", function() {
-      expect( 1 );
-      strictEqual( this.prop, undefined, "this is a per-module object" )
+    test("test with setup and teardown", function() {
+      expect(3);
+      same(this.prop, "foo", "this.prop === 'foo' in all tests");
     });
   </pre>
   <aside>
@@ -573,200 +552,105 @@
   <h1>Sweet, no errors!</h1>
   <p class="subhead">But as you can see, sometimes no errors is a bad thing.</p>
   <pre class="brush:js">
-    test( "no errors", function() {
-
+    test("no errors", function() {
       var actual = false;
 
-      setTimeout( function(){
-
-        ok( actual, "this test would fail.. if it ever ran" );
-
-      }, 1000 );
+      setTimeout(function() {
+        ok(actual, "this test would fail.. if it ever ran");
+      }, 1000);
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?no%20errors">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?filter=no%20errors">Run this test in QUnit</a>
   </aside>
 </section>
 
 <section>
   <h1>Set Expectations!</h1>
   <p class="subhead">Now you get an error.. but it's not the error you want.</p>
-  <pre class="brush:js">
-    test( "expectations", function() {
-      expect( 1 );
+  <pre class="brush:js highlight:[2]">
+    test("expectations", function() {
+      expect(1);
 
       var actual = false;
 
-      setTimeout( function(){
-
-        ok( actual, "this test would fail.. if it ever ran" );
-
-      }, 1000 );
+      setTimeout(function() {
+        ok(actual, "this test would fail.. if it ever ran");
+      }, 1000);
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?expectations">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?filter=expectations">Run this test in QUnit</a>
   </aside>
 </section>
 
 <section>
   <h1><code>stop</code> &amp; <code>start</code></h1>
   <p class="subhead">You must tell QUnit to wait for an asynchronous action to complete.</p>
-  <pre class="brush:js class-name:l20">
-    test( "stop & start", function() {
-      expect( 1 );
+  <pre class="brush:js class-name:l20 highlight:[6,9]">
+    test("stop &amp; start", function() {
+      expect(1);
 
       var actual = false;
 
       stop();
-      setTimeout( function(){
-
-        ok( actual, "this test actually runs, and fails" );
+      setTimeout(function() {
+        ok(actual, "this test actually runs, and fails");
         start();
-
-      }, 1000 );
+      }, 1000);
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?stop%20%26%20start">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?filter=stop%20%26%20start">Run this test in QUnit</a>
   </aside>
 </section>
 
 <section>
   <h1><code>asyncTest</code></h1>
   <p class="subhead">Another way to tell QUnit to wait for an asynchronous action to complete.</p>
-  <pre class="brush:js class-name:l20">
-    asyncTest( "asyncTest & start", function() {
-      expect( 1 );
+  <pre class="brush:js class-name:l20 highlight:[1,8]">
+    asyncTest("asyncTest &amp; start", function() {
+      expect(1);
 
       var actual = false;
 
-      setTimeout( function(){
-
-        ok( actual, "this test actually runs, and fails" );
+      setTimeout(function() {
+        ok(actual, "this test actually runs, and fails");
         start();
-
-      }, 1000 );
+      }, 1000);
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?asyncTest%20%26%20start">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?filter=asyncTest%20%26%20start">Run this test in QUnit</a>
   </aside>
 </section>
 
 <section>
-  <h1>Using a Timeout</h1>
-  <p class="subhead">Jörn says, &ldquo;use this when debugging, but don't commit it!&rdquo;</p>
-  <pre class="brush:js">
-    test( "stop w/ timeout", function() {
-      expect( 1 );
-
-      stop( 1000 );
-      $.getJSON( "http://oops.com?callback=?", function( data ) {
-
-        ok( actual, "this test would fail.. if it ever ran" );
-        start();
-
-      });
-    });
-  </pre>
-  <aside>
-    <a href="unit-testing-qunit/asynchronous.html?stop%20w%2F%20timeout">Run this test in QUnit</a>
-  </aside>
-</section>
-
-<section>
-  <h1>Multiple Async Functions</h1>
-  <p>(In one test)</p>
-</section>
-
-<section>
-  <h1>The Wrong Way</h1>
-  <p class="subhead">Because this test is <i>done</i> after two seconds, regardless.</p>
-  <pre class="brush:js class-name:l20">
-    asyncTest( "multiple async w/ setTimeout", function() {
-      expect( 4 );
-
-      var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
-
-      $.getJSON( url, { a: 1 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.a, "1", "the value of data.a should be 1" );
-      });
-
-      $.getJSON( url, { b: 2 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.b, "2", "the value of data.b should be 2" );
-      });
-
-      setTimeout( start, 2000 );
-    });
-  </pre>
-  <aside>
-    <a href="unit-testing-qunit/asynchronous.html?multiple%20async%20w%2F%20setTimeout">Run this test in QUnit</a>
-  </aside>
-</section>
-
-<section>
-  <h1>A Better Way</h1>
-  <p class="subhead">This test is done when it's <i>done</i>.</p>
-  <pre class="brush:js class-name:l20">
-    test( "multiple async w/ counter", function() {
-      expect( 4 );
-
-      stop();
-
-      // Only call start() when counter is 0.
-      var counter = 2;
-      function done() { --counter || start(); }
-
-      var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
-
-      $.getJSON( url, { a: 1 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.a, "1", "the value of data.a should be 1" );
-        done();
-      });
-
-      $.getJSON( url, { b: 2 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.b, "2", "the value of data.b should be 2" );
-        done();
-      });
-    });
-  </pre>
-  <aside>
-    <a href="unit-testing-qunit/asynchronous.html?multiple%20async%20w%2F%20counter">Run this test in QUnit</a>
-  </aside>
-</section>
-
-<section>
-  <h1>The Best Way</h1>
-  <p class="subhead">Jörn added this one in... because I asked nicely.</p>
-  <pre class="brush:js class-name:l20">
-    test( "multiple async w/ multiple stops", function() {
-      expect( 4 );
+  <h1><code>stop<em>s</em></code> &amp; <code>start<em>s</em></code></h1>
+  <p class="subhead">Jörn added this in... because I asked nicely.</p>
+  <pre class="brush:js class-name:l20 highlight:[6,10,13,17]">
+    test("stops &amp; starts", function() {
+      expect(4);
 
       var url = "http://jsfiddle.net/echo/jsonp/?callback=?";
 
       stop();
-      $.getJSON( url, { a: 1 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.a, "1", "the value of data.a should be 1" );
+      $.getJSON(url, {a: 1}, function(data) {
+        ok(data, "data is returned from the server");
+        equal(data.a, "1", "the value of data.a should be 1");
         start();
       });
 
       stop();
-      $.getJSON( url, { b: 2 }, function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.b, "2", "the value of data.b should be 2" );
+      $.getJSON(url, {b: 2}, function(data) {
+        ok(data, "data is returned from the server");
+        equal(data.b, "2", "the value of data.b should be 2");
         start();
       });
     });
   </pre>
   <aside>
-    <a href="unit-testing-qunit/asynchronous.html?multiple%20async%20w%2F%20multiple%20stops">Run this test in QUnit</a>
+    <a href="unit-testing-qunit/asynchronous.html?filter=stops%20%26%20starts">Run this test in QUnit</a>
   </aside>
 </section>
 
@@ -776,52 +660,43 @@
 </section>
 
 <section>
-  <h1>Mockjax</h1>
-  <p class="subhead">Mock Your Ajax Requests with Mockjax for Rapid Development</p>
+  <h1>Mocking AJAX</h1>
+  <p class="subhead">If you mock your AJAX Requests, you test your JavaScript, not your server.</p>
   <pre class="brush:js class-name:l20">
     // Simulate your API.
 
-    $.mockjax({
-      url: '/user',
-      contentType: 'text/json',
-      responseText: {
-        status: -1
-      }
-    });
-
-    $.mockjax({
-      url: '/user/*',
-      contentType: 'text/json',
-      responseText: {
-        status: 1,
-        user: 'sample user'
+    $.mockAjax("json", {
+      "/user": {status: -1},
+      "/user/(\\d+)": function(matches) {
+        return {status: 1, user: "sample user " + matches[1]};
       }
     });
 
     // Unit tests.
 
-    test( "user tests", function() {
-      expect( 4 );
+    test("user tests", function() {
+      expect(5);
 
       stop();
-      $.getJSON( "/user", function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.status, "-1", "no user specified, status should be -1" );
+      $.getJSON("/user", function(data) {
+        ok(data, "data is returned from the server");
+        equal(data.status, "-1", "no user specified, status should be -1");
         start();
       });
 
       stop();
-      $.getJSON( "/user/123", function( data ) {
-        ok( data, "data is returned from the server" );
-        equal( data.status, "1", "user found, status should be 1" );
+      $.getJSON("/user/123", function(data) {
+        ok(data, "data is returned from the server");
+        equal(data.status, "1", "user found, status should be 1");
+        equal(data.user, "sample user 123", "user found, status should be 1");
         start();
       });
     });
+
   </pre>
   <aside>
     <a href="unit-testing-qunit/mocked-ajax.html">Run mocked tests in QUnit</a>
-    <a href="http://enterprisejquery.com/2010/07/mock-your-ajax-requests-with-mockjax-for-rapid-development/">Mockjax documentation</a>
-    <a href="https://github.com/appendto/jquery-mockjax">Mockjax on GitHub</a>
+    <a href="https://gist.github.com/1371254">My "Simple jQuery (1.5+) AJAX Mocking" Plugin</a>
   </aside>
 </section>
 
@@ -831,7 +706,7 @@
 
 <section>
   <h1>Running Specific Tests</h1>
-  <p class="subhead">Add <code>?test</code> to the URL to run only that module/test. Combine terms with <code>&amp;</code>.</p>
+  <p class="subhead">Add <code>?filter=foo</code> to the URL to run only tests whose names contain "foo".</p>
   <table>
     <tr>
       <th colspan="2">&ldquo;Modules&rdquo; Test Suite</th>
@@ -842,11 +717,11 @@
     </tr>
     <tr>
       <td>&ldquo;core&rdquo; module</td>
-      <td><a href="unit-testing-qunit/modules.html?core">modules.html?core</a></td>
+      <td><a href="unit-testing-qunit/modules.html?filter=core">modules.html?filter=core</a></td>
     </tr>
     <tr>
       <td>&ldquo;options&rdquo; module</td>
-      <td><a href="unit-testing-qunit/modules.html?options">modules.html?options</a></td>
+      <td><a href="unit-testing-qunit/modules.html?filter=options">modules.html?filter=options</a></td>
     </tr>
     <tr>
       <th colspan="2">&ldquo;Assertions&rdquo; Test Suite</th>
@@ -857,27 +732,27 @@
     </tr>
     <tr>
       <td>&ldquo;ok&rdquo; test</td>
-      <td><a href="unit-testing-qunit/assertions.html?ok">assertions.html?ok</a></td>
+      <td><a href="unit-testing-qunit/assertions.html?filter=ok">assertions.html?filter=ok</a></td>
     </tr>
     <tr>
-      <td>&ldquo;ok&rdquo; &amp; &ldquo;equal&rdquo; tests</td>
-      <td><a href="unit-testing-qunit/assertions.html?ok&equal">assertions.html?ok&amp;equal</a></td>
+      <td>&ldquo;equal&rdquo; tests</td>
+      <td><a href="unit-testing-qunit/assertions.html?filter=equal">assertions.html?filter=equal</a></td>
     </tr>
   </table>
 </section>
 
 <section>
-  <h1>Global Pollution Detection</h1>
+  <h1>Global Pollution</h1>
   <p class="subhead">Just add <code>?noglobals</code> to the URL, and QUnit will fail any &ldquo;leaky&rdquo; tests.</p>
   <pre class="brush:js class-name:l20">
-    test( "not leaky", 1, function() {
+    test("not leaky", 1, function() {
       var x = true;
-      ok( x, "passes because x is true" );
+      ok(x, "passes because x is true");
     });
 
-    test( "leaky", 1, function() {
+    test("leaky", 1, function() {
       x = true;
-      ok( x, "also passes because x is true" );
+      ok(x, "also passes because x is true");
     });
   </pre>
   <aside>
@@ -897,44 +772,44 @@
     // Runs once at the very beginning.
 
     QUnit.begin = function() {
-      console.log( "Running Test Suite" );
+      console.log("Running Test Suite");
     };
 
     // Runs once at the very end.
 
-    QUnit.done = function( failures, total ) {
-      console.info( "Suite: %d failures / %d tests", failures, total );
+    QUnit.done = function(failures, total) {
+      console.info("Suite: %d failures / %d tests", failures, total);
     };
 
     // Runs once after each assertion.
 
-    QUnit.log = function( result, message ) {
-      console[ result ? "log" : "error" ]( message );
+    QUnit.log = function(result, message) {
+      console[ result ? "log" : "error" ](message);
     };
 
     // Runs before each test.
 
-    QUnit.testStart = function( name ) {
-      console.group( "Test: " + name );
+    QUnit.testStart = function(name) {
+      console.group("Test: " + name);
     };
 
     // Runs after each test.
 
-    QUnit.testDone = function( name, failures, total ) {
-      console.info( "Test: %d failures / %d tests", failures, total );
+    QUnit.testDone = function(name, failures, total) {
+      console.info("Test: %d failures / %d tests", failures, total);
       console.groupEnd();
     };
 
     // Runs before each module.
 
-    QUnit.moduleStart = function( name ) {
-      console.group( "Module: " + name );
+    QUnit.moduleStart = function(name) {
+      console.group("Module: " + name);
     };
 
     // Runs after each module.
 
-    QUnit.moduleDone = function( name, failures, total ) {
-      console.info( "Module: %d failures / %d tests", failures, total );
+    QUnit.moduleDone = function(name, failures, total) {
+      console.info("Module: %d failures / %d tests", failures, total);
       console.groupEnd();
     };
 
@@ -942,12 +817,12 @@
     // override the built-in #qunit-fixture reset logic.
 
     QUnit.reset = function() {
-      console.log( "Test done!" );
+      console.log("Test done!");
     };
   </pre>
   <aside>
     <a href="unit-testing-qunit/callbacks.html">Run tests using these callbacks in QUnit</a>
-    <a href="http://swarm.jquery.org/git/jquery/test/data/testrunner.js">jQuery testrunner.js</a>
+    <a href="https://github.com/jquery/jquery/blob/master/test/data/testrunner.js">jQuery testrunner.js</a>
     <a href="http://swarm.jquery.org/js/inject.js">TestSwarm inject.js</a>
   </aside>
 </section>
@@ -958,17 +833,17 @@
   <img src="unit-testing-qunit/testswarm.jpg" alt="TestSwarm">
   <aside>
     <a href="http://swarm.jquery.org/">swarm.jquery.org</a>
-    <a href="https://github.com/jeresig/testswarm/wiki">TestSwarm wiki</a>
+    <a href="https://github.com/jquery/testswarm/wiki">TestSwarm wiki</a>
   </aside>
 </section>
 
 <section>
   <h1>QUnit Recap</h1>
   <ul>
-    <li>Write testable code</li>
-    <li>Tests should be atomic</li>
-    <li>Organize tests into modules</li>
-    <li>Simulate your AJAX</li>
+    <li>Organize your tests into modules</li>
+    <li>Your tests should be atomic</li>
+    <li>Mock your AJAX requests</li>
+    <li>You'll be in good company</li>
     <li>It's only three files!</li>
   </ul>
 </section>
