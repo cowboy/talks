@@ -13,7 +13,7 @@
     if (typeof start !== "number") {
       start = 1;
     }
-    return this.each(function(i){
+    return this.each(function(i) {
       $(this).prepend((start + i) + ". ");
     });
   };
