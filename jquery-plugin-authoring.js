@@ -66,7 +66,7 @@ function setHref(elems, href) {
   elems.prop("href", href);
 };
 
-setHref($("a"), "/super-lame"); // UM, AWKWARD?!
+setHref($("a"), "/super-lame"); // AWKWARD
 
 
 // Now this, on the other hand...
@@ -74,7 +74,11 @@ jQuery.fn.href = function(href) {
   return this.prop("href", href);
 };
 
-$("a").href("/super-awesome"); // OMG AWESOME!!1
+$("a").href("/super-awesome"); // AWESOME
+
+
+// Which is doubly awesome, because it saves us, like, eight characters:
+$("a").prop("href", "/super-awesome"); // SLIGHTLY LESS AWESOME
 
 
 
@@ -87,62 +91,67 @@ $("a").href("/super-awesome"); // OMG AWESOME!!1
 
 // Function Declaration.
 function foo(a) { console.log("foo " + a); }
-foo(1); // "foo 1"
+foo(1); // logs "foo 1"
 
 // Function Expression.
 var bar = function(a) { console.log("bar " + a); };
-bar(2); // "bar 2"
+bar(2); // logs "bar 2"
 
 
 // Without the parens, the IIFE is broken.
 function(a) { console.log("broken " + a); }(3); // SyntaxError
 
 // But with the parens, the IIFE works.
-(function(a) { console.log("awesome " + a); }(4)); // "awesome 4"
+(function(a) { console.log("awesome " + a); }(4)); // logs "awesome 4"
 
 
 // The "jQuery plugin" IIFE
 (function($) {
-
   // Vars and functions are local to the IIFE.
-  var myLocalVar = "hello";
-
+  var myLocalVar = "plugin";
   function myLocalFunction() {
-    return myLocalVar + " world";
+    return "my " + myLocalVar;
   }
 
   // A "static" jQuery method.
-  $.myplugin = function() {
-    // Your code goes here.
+  $.myPlugin = function(isWhat) {
+    return myLocalFunction() + " is " + isWhat;
   };
 
-  // A "collection" jQuery method.
-  $.fn.myplugin = function() {
-    // Your code goes here.
+  // A "jQuery object" method.
+  $.fn.myPlugin = function(isWhat) {
+    return this.html($.myPlugin(isWhat));
   };
-
 }(jQuery));
+
+// These variables are private, and don't clutter up the global scope:
+myLocalVar      // ReferenceError
+myLocalFunction // ReferenceError
+
+// But the jQuery plugin methods works just fine:
+$.myPlugin("awesome") // "my plugin is awesome"
+
 
 
 // What are the alternatives to using an IIFE?
 
-// You can just use `jQuery` everywhere, instead of `$`.
-jQuery.fn.myplugin = function(arg) {
-  if (jQuery.isFunction(arg)) {
+// You could just use `jQuery` everywhere, instead of `$`.
+jQuery.fn.myplugin = function(val) {
+  if (jQuery.isFunction(val)) {
     // Do something.
-  } else if (jQuery.isArray(arg)) {
+  } else if (jQuery.isArray(val)) {
     // Do something else.
   }
 };
 
-// Why not just use `$`? Because if your user had to use $.noConflict() to
-// get jQuery to work with MooTools, congratulations. You've just created a
-// MooTools plugin.
+// Why not just use `$`? Because if the plugin user had to use $.noConflict()
+// to get jQuery to work with MooTools, congratulations. You've just created
+// a MooTools plugin.
 $.fn.myplugin = function() {
   // MooTools probably doesn't have $.fn anyways.
 };
 
-// Also...
+// Also, if you're not inside an IIFE, all your vars are global.
 var myLocalVar = "This is really a global var";
 
 // I've written a whole article about IIFEs. Read it.
@@ -154,23 +163,23 @@ var myLocalVar = "This is really a global var";
 
 
 // ===========================================================================
-// What's `this` Inside a "Collection" Method?
+// What's `this` Inside a "jQuery Object" Method?
 // ===========================================================================
 
 (function($) {
 
-  // Inside a jQuery "collection" method:
+  // Inside a "jQuery object" method:
   $.fn.test = function() {
     // this === the jQuery object.
   };
 
-  $("div").test(); // Inside the function, this === $("div")
+  $("div").test(); // Inside the "test" function, this === $("div")
 
   // Not to be confused with:
 
   // Inside an each callback (or map, or filter, or event handler, etc):
   $("div").each(function() {
-    // this === the DOM element, as jQuery iterates through the set.
+    // this === the DOM element, as jQuery iterates over selected elements.
   });
 
 }(jQuery));
@@ -197,10 +206,11 @@ var myLocalVar = "This is really a global var";
   // explicitly return a value.
 
 
-  // Also, while we're talking about jQuery methods, NEVER use undocumented
-  // jQuery methods in your plugin. Why? because they always seem to get
-  // changed when you're least able to update your code, which makes your
-  // users all kinds of :'-( <= SEE? THIS EMOTICON IS CRYING
+  // Also, while we're talking about using jQuery methods in your plugin,
+  // NEVER EVER EVER use undocumented (private) jQuery methods or properties
+  // in your plugin. Why? Because that stuff has a long history of always
+  // getting changed when you're least able to update your code, which makes
+  // your plugin users all kinds of :'-( THIS EMOTICON IS CRYING
 
 }(jQuery));
 
@@ -214,12 +224,13 @@ var myLocalVar = "This is really a global var";
     return this; // returning `this` makes any method chainable!
   };
 
-  $("a").href("/test"); // This works.
+  $("a").href("/test"); // This still works.
   $("a").href("/test").addClass("gonna-work"); // Much better!
 
-  // And because jQuery#prop is a chainable method, you can just do this.
+  // Here's the crazy part. Because the jQuery#prop method is chainable when
+  // used as a setter, you can do this.
   $.fn.href = function(href) {
-    return this.prop("href", href);
+    return this.prop("href", href); // MIND = BLOWN
   };
 
 }(jQuery));
@@ -236,8 +247,8 @@ var myLocalVar = "This is really a global var";
 (function($) {
 
   // We all know this, right?
-  $("li").html("hello world"); // Set innerHTML of every selected element.
-  $("li").html(); // "hello world" (get innerHTML of first selected element).
+  $("li").html("hello world"); // Set the HTML of every selected element.
+  $("li").html() // "hello world" (get the HTML of first selected element).
 
   // But what's the problem with this? (besides the fact that I haven't saved
   // a reference to the jQuery object in a variable, which we all know is bad)
@@ -280,11 +291,16 @@ var myLocalVar = "This is really a global var";
 
   $("li").yell(); // Works just like you (and your plugin's users) expect.
 
+}(jQuery));
 
-  // Here's a general-purpose template. Modify as-necessary.
-  $.fn.myMethod = function() {
+
+// Here's a general-purpose template. Modify as-necessary.
+
+(function($) {
+
+  $.fn.myPlugin = function() {
     return this.each(function() {
-      // Your code goes here!
+      // Your per-element code goes here!
     });
   };
 
@@ -307,24 +323,31 @@ var myLocalVar = "This is really a global var";
     return this.prop("href", href);
   };
 
-  $("a").href("/test"); // Set href property of every selected element.
-  $("a").href(); // "/test" (get href property of first selected element).
+  $("a").href("/test"); // Set property of every selected element (and chain).
+  $("a").href()         // "/test" (get property of first selected element).
 
 
   // What if our core logic couldn't just use a built-in jQuery method?
   $.fn.href = function(href) {
-    if (arguments.length > 0) {
-      // Arguments were passed (setter). Set the current href property of all
+    if (href == null) {
+      // No arguments was passed (getter). Return the current href property
+      // of the first selected element.
+      return this.get(0).href;
+    } else {
+      // An argument was passed (setter). Set the current href property of all
       // selected elements and return the jQuery object, allowing chaining.
       return this.each(function() {
         this.href = href;
       });
-    } else {
-      // No arguments were passed (getter). Return the current href property
-      // of the first selected element.
-      return this.get(0).href;
     }
   };
+
+  // FWIW, testing `val == null` is equivalent to testing `val === null &&
+  // val === undefined`. In general, I *strongly recommend* against using the
+  // == operator, because it does type coercion. But it's super-convenient
+  // for testing to see if a value is either null or undefined. So, in this
+  // case, it's ok. There are articles about this. JSHint has an "eqnull"
+  // setting just for this. But use === otherwise.
 
 }(jQuery));
 
@@ -340,18 +363,18 @@ var myLocalVar = "This is really a global var";
 (function($) {
 
   // Have you ever used the jQuery#end method?
-  $("ul").children().addClass("lis").end().addClass("uls");
+  $("ul").children().addClass("li").end().addClass("ul");
 
 
   // So, how do you create your own .end()-able method?
 
   // If you're using a jQuery method internally, it's easy.
   $.fn.spans = function() {
-    return this.find("spans");
+    return this.find("span");
   };
 
   // Awesome!
-  $("div").spans().addClass("spans").end().addClass("divs");
+  $("div").spans().addClass("span").end().addClass("div");
 
 
   // But what if things get a little more.. complicated? Note: Andrew Wirick
@@ -360,8 +383,8 @@ var myLocalVar = "This is really a global var";
     return this.parent().siblings().children();
   };
 
-  // Whoops! jQuery#end only reverts to the previous set
-  $("li:eq(0)").cousins().addClass("cousins").end().addClass("aunts-n-uncles");
+  // Whoops! jQuery#end only reverts to the previous set.
+  $("li:eq(0)").cousins().addClass("cousin").end().addClass("aunt-or-uncle");
 
 
   // Let's do this the right way, using jQuery.pushStack.
@@ -370,7 +393,7 @@ var myLocalVar = "This is really a global var";
   };
 
   // Much better.
-  $("li:eq(0)").cousins().addClass("cousins").end().addClass("lis");
+  $("li:eq(0)").cousins().addClass("cousin").end().addClass("li");
 
 
   // jQuery#pushStack supports a few more options. Check out the API docs
@@ -394,7 +417,7 @@ var myLocalVar = "This is really a global var";
   // Filter the current set of nodes down to just text nodes.
   $.fn.textNodes = function() {
     return this.filter(function() {
-      return this.nodeType === 3;
+      return this.nodeType === Node.TEXT_NODE;
     });
   };
 
@@ -446,7 +469,7 @@ var myLocalVar = "This is really a global var";
   $.myPlugin.submethod(); // So will this.
 
 
-  // For jQuery "collection" methods, this DOES NOT WORK WONDERFULLY:
+  // For "jQuery object" methods, this DOES NOT WORK WONDERFULLY:
 
   $.fn.myPlugin = function() {
     // Your code goes here.
@@ -468,7 +491,7 @@ var myLocalVar = "This is really a global var";
   $("li").myPlugin().submethod();
 
 
-  // For basic jQuery "collection" methods, this is usually sufficient.
+  // For basic "jQuery object" methods, this is usually sufficient.
   $.fn.myPlugin = function() {
     // Your code goes here.
   };
@@ -484,6 +507,7 @@ var myLocalVar = "This is really a global var";
   // You can, of course, just use the jQuery UI Widget Factory to make a
   // stateful plugin with submethods, events and more. Read more here:
   // http://ajpiano.com/widgetfactory/
+  // http://blog.nemikor.com/2010/05/15/building-stateful-jquery-plugins/
   $("li").myPlugin("submethod", options);
 
 }(jQuery));
@@ -500,34 +524,38 @@ var myLocalVar = "This is really a global var";
 (function($) {
 
   // Test if an element is in the DOM.
-  $.expr[":"].attached = function(elem) {
+  $.expr.filters.attached = function(elem) {
     return $.contains(document.documentElement, elem);
   };
 
-  $("div").is(":attached"); // true
-  $("div").detach().is(":attached"); // false
-  $("<div/>").is(":attached"); // false
+  $("div").is(":attached")          // true
+  $("div").detach().is(":attached") // false
+  $("<div/>").is(":attached")       // false
 
 
   // How about a detached selector?
-  $.expr[":"].detached = function(elem) {
+  $.expr.filters.detached = function(elem) {
     return !$.contains(document.documentElement, elem);
   };
 
+  $("div").is(":detached")          // false
+  $("div").detach().is(":detached") // true
+  $("<div/>").is(":detached")       // true
 
-  // Ok, now let's DRY this up a bit.
-  $.extend($.expr[":"], {
-    attached: attached,
-    detached: function(elem) { return !attached(elem); }
+
+  // Now let's organize this code and DRY it up a bit.
+  $.extend($.expr.filters, {
+    attached: function(elem) {
+      return $.contains(document.documentElement, elem);
+    },
+    detached: function(elem) {
+      return !$.expr.filters.attached(elem);
+    }
   });
 
-  function attached(elem) {
-    return $.contains(document.documentElement, elem);
-  }
 
-
-  // You can also pass arguments to selectors.
-  $.expr[":"].hasdata = function(elem, i, match) {
+  // You can also pass arguments to selectors, match[3] is that value.
+  $.expr.filters.hasdata = function(elem, i, match) {
     // Has data been stored on the element?
     var hasData = $.hasData(elem);
     if (match[3] == null) {
@@ -541,16 +569,16 @@ var myLocalVar = "This is really a global var";
     }
   };
 
-  $("p:hasdata").length; // 0
+  $("p:hasdata").length           // 0
   $("p:first").data("foo", 123);
-  $("p:hasdata").length; // 1
-  $("p:hasdata(foo)").length; // 1
-  $("p:hasdata(bar)").length; // 0
+  $("p:hasdata").length           // 1
+  $("p:hasdata(foo)").length      // 1
+  $("p:hasdata(bar)").length      // 0
 
 
-  // FWIW, I *strongly recommend* against using the == operator, because it
-  // does type coercion. Except when comparing null == undefined. Then, it's
-  // ok. There are articles on this. I'll probably write one too, soon.
+  // Note: you might also see $.expr[":"] used in custom selectors. It's
+  // just another reference to the $.expr.filters object. See the jQuery
+  // source if you don't believe me! http://bit.ly/jqsource
 
 }(jQuery));
 
@@ -567,17 +595,17 @@ var myLocalVar = "This is really a global var";
 
   // If your plugin only has one option, handling defaults is easy.
   $.fn.colorize = function(color) {
-    return this.css("color", color || "red");
+    return this.css("color", color || "black");
   };
 
-  $("p").colorize(); // red!
+  $("p").colorize();        // black!
   $("p").colorize("green"); // green!
 
 
   // When you start to have more optional arguments, things can get messy:
 
   $.fn.colorizeAndOrSetWidth = function(color, width) {
-    // If `width` was passed, but `color` was not, shift arguments.
+    // If `width` was passed, but `color` was not, shuffle argument values.
     if (typeof color === "number") {
       width = color;
       color = null;
@@ -585,7 +613,7 @@ var myLocalVar = "This is really a global var";
     // Set arguments to default values if necessary.
     if (color == null) { color = "red"; }
     if (width == null) { width = 100; }
-    // Now we can finally actually do stuff.
+    // Now we can finally, actually, do stuff.
     return this.css("color", color).width(width);
   };
 
@@ -612,12 +640,13 @@ var myLocalVar = "This is really a global var";
   $.fn.colorizeAndOrSetWidth = function(options) {
     // Copy defaults and then the passed options into an empty object, then
     // set the result into options, thus updating it.
-    options = $.extend({}, $.fn.colorizeAndOrSetWidth.defaults, options);
+    options = $.extend({}, $.fn.colorizeAndOrSetWidth.options, options);
     // Now do stuff.
     return this.css("color", options.color).width(options.width);
   };
 
-  $.fn.colorizeAndOrSetWidth.defaults = {color: "red", width: 100};
+  // Expose default options.
+  $.fn.colorizeAndOrSetWidth.options = {color: "red", width: 100};
 
 }(jQuery));
 
@@ -634,39 +663,41 @@ var myLocalVar = "This is really a global var";
 // with jQuery. It's just JavaScript. Don't attach arbitrary methods to jQuery
 // unless they're REALLY jQuery plugins.
 (function($) {
-  var date;
+  var startDate;
 
   $.timer = {
     start: function() {
-      date = new Date;
+      startDate = new Date();
     },
     elapsed: function() {
-      return new Date - date;
+      return new Date() - startDate;
     }
   };
 }(jQuery));
 
 $.timer.start();
-$.timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed)
+// wait one second
+$.timer.elapsed(); // 1000
 
 
 // Use this structure when creating timer.js, and you'll get a global timer
 // object with two functions.
 (function(exports) {
-  var date;
+  var startDate;
 
   exports.timer = {
     start: function() {
-      date = new Date;
+      startDate = new Date();
     },
     elapsed: function() {
-      return new Date - date;
+      return new Date() - startDate;
     }
   };
 }(typeof exports === "object" && exports || this));
 
 timer.start();
-timer.elapsed(); // 1000 (or whatever number of milliseconds have elapsed).
+// wait one second
+timer.elapsed(); // 1000
 
 
 // Don't like globals? Me neither. Just do something like this before
@@ -682,10 +713,27 @@ window.timer // undefined
 
 
 // Or just use a script loader! This non-jQuery-specific timer.js will work
-// in Node.js, RequireJS and curl.js (there's a config option in 0.6 for it).
+// in Node.js, RequireJS and curl.js (there's a config option for it).
 
 // Per John Hann (aka @unscriptable), "As long as the AMD loader can auto-wrap
-// CJS modules in a define(), it's all good."
+// CommonJS modules in a define(), it's all good."
+
+
+
+
+
+// ===========================================================================
+// Using grunt
+// ===========================================================================
+
+// The website (coming soon)
+// http://gruntjs.com/
+
+// A jQuery Plugin with Grunt & QUnit
+// http://javascriptplayground.com/blog/2012/04/a-jquery-plugin-with-grunt-qunit
+
+// Grunt: Let's create a jQuery plugin!
+// http://codestre.am/c87f9daa6ec5df92dbc6edfc8
 
 
 
@@ -696,19 +744,4 @@ window.timer // undefined
 // ===========================================================================
 
 // Still under development, actually. Check this out for the latest info:
-// http://bit.ly/jq-plugins-package-json
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// https://github.com/jquery/plugins.jquery.com/blob/master/docs/package.md
