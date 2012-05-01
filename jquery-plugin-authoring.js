@@ -342,7 +342,7 @@ var myLocalVar = "This is really a global var";
     }
   };
 
-  // FWIW, testing `val == null` is equivalent to testing `val === null &&
+  // FWIW, testing `val == null` is equivalent to testing `val === null ||
   // val === undefined`. In general, I *strongly recommend* against using the
   // == operator, because it does type coercion. But it's super-convenient
   // for testing to see if a value is either null or undefined. So, in this
