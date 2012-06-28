@@ -64,14 +64,18 @@ cowboy.plugins.length // 50
 // jQuery-like.
 function setHref(elems, href) {
   elems.prop("href", href);
-};
+}
 
 setHref($("a"), "/super-lame"); // AWKWARD
 
 
 // Now this, on the other hand...
 jQuery.fn.href = function(href) {
-  return this.prop("href", href);
+  if (arguments.length === 0) {
+    return this.prop("href");
+  } else {
+    return this.prop("href", href);
+  }
 };
 
 $("a").href("/super-awesome"); // AWESOME
@@ -120,7 +124,7 @@ function(a) { console.log("broken " + a); }(3); // SyntaxError
 
   // A "jQuery object" method.
   $.fn.myPlugin = function(isWhat) {
-    return this.html($.myPlugin(isWhat));
+    return this.html( $.myPlugin(isWhat) );
   };
 }(jQuery));
 
@@ -195,6 +199,7 @@ var myLocalVar = "This is really a global var";
 
 (function($) {
 
+  // This kinda works...
   $.fn.href = function(href) {
     this.prop("href", href);
   };
@@ -219,6 +224,7 @@ var myLocalVar = "This is really a global var";
 
 (function($) {
 
+  // A little better...
   $.fn.href = function(href) {
     this.prop("href", href);
     return this; // returning `this` makes any method chainable!
@@ -252,7 +258,7 @@ var myLocalVar = "This is really a global var";
 
   // But what's the problem with this? (besides the fact that I haven't saved
   // a reference to the jQuery object in a variable, which we all know is bad)
-  $("li").html($("li").html() + "!!!");
+  $("li").html( $("li").html() + "!!!" );
 
 
   // We can solve this problem in a few ways:
@@ -317,10 +323,21 @@ var myLocalVar = "This is really a global var";
 
 (function($) {
 
-  // This works as both getter and setter, because a built-in jQuery method
-  // is used internally.
+  // This works as a setter but NOT as a getter in newer versions of jQuery
+  // because jQuery getter/setter methods look at the number of arguments
+  // passed, not the values of the arguments.
   $.fn.href = function(href) {
     return this.prop("href", href);
+  };
+
+  // This works as both getter and setter, because the correct number of
+  // arguments are used for both setter and getter.
+  $.fn.href = function(href) {
+    if (arguments.length === 0) {
+      return this.prop("href");
+    } else {
+      return this.prop("href", href);
+    }
   };
 
   $("a").href("/test"); // Set property of every selected element (and chain).
@@ -329,8 +346,8 @@ var myLocalVar = "This is really a global var";
 
   // What if our core logic couldn't just use a built-in jQuery method?
   $.fn.href = function(href) {
-    if (href == null) {
-      // No arguments was passed (getter). Return the current href property
+    if (arguments.length === 0) {
+      // No arguments were passed (getter). Return the current href property
       // of the first selected element.
       return this.get(0).href;
     } else {
@@ -341,13 +358,6 @@ var myLocalVar = "This is really a global var";
       });
     }
   };
-
-  // FWIW, testing `val == null` is equivalent to testing `val === null ||
-  // val === undefined`. In general, I *strongly recommend* against using the
-  // == operator, because it does type coercion. But it's super-convenient
-  // for testing to see if a value is either null or undefined. So, in this
-  // case, it's ok. There are articles about this. JSHint has an "eqnull"
-  // setting just for this. But use === otherwise.
 
 }(jQuery));
 
@@ -389,7 +399,7 @@ var myLocalVar = "This is really a global var";
 
   // Let's do this the right way, using jQuery.pushStack.
   $.fn.cousins = function() {
-    return this.pushStack(this.parent().siblings().children());
+    return this.pushStack( this.parent().siblings().children() );
   };
 
   // Much better.
@@ -579,6 +589,13 @@ var myLocalVar = "This is really a global var";
   // Note: you might also see $.expr[":"] used in custom selectors. It's
   // just another reference to the $.expr.filters object. See the jQuery
   // source if you don't believe me! http://bit.ly/jqsource
+
+  // And FWIW, testing `val == null` yields the same result as testing
+  // `val === null || val === undefined`. In general, you should avoid the
+  // == operator, because it does type coercion. But it's super-convenient
+  // for testing to see if a value is either null or undefined. So, in this
+  // case, it's ok. There are articles about this. JSHint has an "eqnull"
+  // setting just for this. But use === otherwise.
 
 }(jQuery));
 
