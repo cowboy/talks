@@ -348,8 +348,8 @@ var myLocalVar = "This is really a global var";
   $.fn.href = function(href) {
     if (arguments.length === 0) {
       // No arguments were passed (getter). Return the current href property
-      // of the first selected element.
-      return this.get(0).href;
+      // of the first selected element if there is one, otherwise null.
+      return this.length === 0 ? null : this.get(0).href;
     } else {
       // An argument was passed (setter). Set the current href property of all
       // selected elements and return the jQuery object, allowing chaining.
